@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>P4280017.JPG</file>
+        <file>annulla16x16.png</file>
+        <file>account.png</file>
+        <file>aggiungi16x16.png</file>
+        <file>bancomatblu48x48.png</file>
+        <file>cassa48x48.png</file>
+        <file>categoria_articolo48x48.png</file>
+        <file>categoria_cliente48x48.png</file>
+        <file>categoria_fornitore48x48.png</file>
+        <file>codice_a_barre48x48.png</file>
+        <file>composizione_listino24x24.png</file>
+        <file>conferma16x16.png</file>
+        <file>conferma24x24.png</file>
+        <file>elimina16x16.png</file>
+        <file>elimina24x24.png</file>
+        <file>fornitore48x48.png</file>
+        <file>inventario24x24.png</file>
+        <file>journal.png</file>
+        <file>listino48x48.png</file>
+        <file>modello_listino24.png</file>
+        <file>pagamento48x48.png</file>
+        <file>promemoria48x48.png</file>
+        <file>pulisci24x24.png</file>
+        <file>report48x48.png</file>
+        <file>ristornat.icns</file>
+        <file>ristornat.png</file>
+        <file>trova24x24.png</file>
+        <file>vendita48x48.png</file>
+        <file>left_arrow-32.png</file>
+        <file>rigth_arrow-32.png</file>
+    </qresource>
+</RCC>

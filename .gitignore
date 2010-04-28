@@ -1,0 +1,27 @@
+# ignore objects and archives
+*.[oa]
+
+# ignore the graphic items
+*graphicsItem*
+
+#ignore the moc object
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+build/*
+
+#ignore the qmake os x files
+*xcodeproj
+*.pro.user
+*Makefile
+
+#ignore the output dir
+Plugins
+
+#ignore the os x useless file
+RistorNAT.app
+*DS_Store
+*.dmgpkg
+
+#ignore the Linguist files
+*.qm

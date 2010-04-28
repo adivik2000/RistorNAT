@@ -1,0 +1,12 @@
+CREATE TABLE "db_version"
+(
+  major_version INTEGER,
+  minor_version INTEGER,
+  patch_version INTEGER,
+  PRIMARY KEY(major_version, minor_version, patch_version)
+) WITH (OIDS=TRUE);
+
+CREATE OR REPLACE FUNCTION ristornat_db_version()
+        RETURNS SETOF db_version AS $$
+                SELECT * FROM db_version;
+$$ LANGUAGE SQL;

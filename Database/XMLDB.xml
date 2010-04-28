@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql>
+<datatypes db="mysql">
+	<group label="Numeric" color="rgb(238,238,170)">
+		<type label="Integer" length="0" sql="INTEGER" re="INT" quote=""/>
+		<type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
+		<type label="Single precision" length="0" sql="FLOAT" quote=""/>
+		<type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
+	</group>
+
+	<group label="Character" color="rgb(255,200,200)">
+		<type label="Char" length="1" sql="CHAR" quote="'"/>
+		<type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
+		<type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
+		<type label="Binary" length="1" sql="BINARY" quote="'"/>
+		<type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
+		<type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
+	</group>
+
+	<group label="Date &amp; Time" color="rgb(200,255,200)">
+		<type label="Date" length="0" sql="DATE" quote="'"/>
+		<type label="Time" length="0" sql="TIME" quote="'"/>
+		<type label="Datetime" length="0" sql="DATETIME" quote="'"/>
+		<type label="Year" length="0" sql="YEAR" quote=""/>
+		<type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
+	</group>
+	
+	<group label="Miscellaneous" color="rgb(200,200,255)">
+		<type label="ENUM" length="1" sql="ENUM" quote=""/>
+		<type label="SET" length="1" sql="SET" quote=""/>
+	</group>
+</datatypes><table x="807" y="187" name="document_purchasing_cost">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="document_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+<default>'NULL'</default></row>
+<row name="document_number" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="seller" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>'NULL'</default><relation table="supplier" row="name" />
+</row>
+<row name="account" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="account" row="id" />
+</row>
+<row name="amount" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="">
+</key>
+</table>
+<table x="811" y="371" name="document_goods_cost">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="document_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+<default>'NULL'</default></row>
+<row name="document_number" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="seller" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>'NULL'</default><relation table="supplier" row="name" />
+</row>
+<row name="account" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="account" row="id" />
+</row>
+<row name="amount" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="">
+</key>
+</table>
+<table x="64" y="195" name="good_for_sale">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="article_category" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<relation table="goods_category" row="code" />
+</row>
+<row name="sell_category" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<relation table="sell_category" row="code" />
+</row>
+<row name="description" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<row name="last_cost" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1108" y="421" name="account">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="description" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>'NULL'</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="">
+</key>
+<comment>Store information for account</comment>
+</table>
+<table x="582" y="344" name="supplier">
+<row name="name" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>'NULL'</default></row>
+<key type="PRIMARY" name="">
+<part>name</part>
+</key>
+</table>
+<table x="550" y="24" name="row_purchasing_cost">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="description" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<row name="quantity" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<row name="price" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<row name="category" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="cost_category" row="code" />
+</row>
+<row name="document" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="document_purchasing_cost" row="id" />
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="344" y="323" name="row_goods_cost">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="description" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<row name="quantity" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<row name="price" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<row name="basic_good" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<relation table="basic_good" row="code" />
+</row>
+<row name="document" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="document_goods_cost" row="id" />
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="75" y="418" name="basic_good">
+<row name="code" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>code</part>
+</key>
+</table>
+<table x="73" y="517" name="article_component">
+<row name="basic_component" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>'NULL'</default><relation table="basic_good" row="code" />
+</row>
+<row name="selling_component" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="good_for_sale" row="id" />
+</row>
+<row name="quantity" null="0" autoincrement="0">
+<datatype>DOUBLE</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>basic_component</part>
+<part>selling_component</part>
+</key>
+</table>
+<table x="278" y="117" name="cost_category">
+<row name="code" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>code</part>
+</key>
+<comment>Category of management cost</comment>
+</table>
+<table x="255" y="237" name="goods_category">
+<row name="code" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>code</part>
+</key>
+</table>
+<table x="69" y="358" name="sell_category">
+<row name="code" null="0" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>code</part>
+</key>
+</table>
+<table x="555" y="566" name="lunch">
+<row name="lunch_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="places" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>lunch_date</part>
+</key>
+</table>
+<table x="385" y="566" name="dinner">
+<row name="dinner_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="places" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>dinner_date</part>
+</key>
+</table>
+</sql>
