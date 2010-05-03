@@ -60,12 +60,8 @@ stackedWContainer::stackedWContainer(QWidget *parent):QWidget(parent)
   */
 stackedWContainer::~stackedWContainer()
 {
-    for (int i = 0; i<m_contentsWidget->count(); i++)
-        delete m_contentsWidget->item(i);
-
     delete m_contentsWidget;
     delete m_pagesWidget;
-    qDeleteAll(m_plugins);
 }
 
 void stackedWContainer::add(pluginInterface *child)

@@ -116,14 +116,14 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
          if (likely(child != 0)) {
              QString family = child->family();
 
-             if (m_fam.contains(family)) {
-                stackedWContainer *cont = m_fam.value(family);
-                cont->add(child);
-             } else {
+             if (! m_fam.contains(family)) {
                 stackedWContainer *cont = new stackedWContainer(tabWidget);
                 tabWidget->addTab(cont,family);
                 m_fam.insert(family,cont);
              }
+
+             stackedWContainer *cont = m_fam.value(family);
+             cont->add(child);
 
              child->registerToolBar(toolBar);
              m_plugins.append(child);
@@ -142,6 +142,13 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
     connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
 
     return tabWidget;
+}
+
+void MainWindow::dump()
+{
+    dbManagement ref;
+
+    ref.dump();
 }
 
 /** @brief Slot for closing active plugin when the page is changed

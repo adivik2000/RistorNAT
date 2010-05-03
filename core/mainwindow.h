@@ -137,6 +137,7 @@ private slots:
     void openSettings();
     void about();
     void pageChanged(int index);
+    void dump();
 
 private:
     Ui::MainWindow *ui; /**< @brief GUI */
