@@ -1,5 +1,5 @@
 #include <QtPlugin>
-#include "basicGood.h"
+#include "basicgood.h"
 #include "simpletable.h"
 
 basicGood::basicGood(QWidget *parent):pluginInterface(parent)

@@ -18,6 +18,10 @@ build/*
 #ignore the output dir
 Plugins
 
+RistorNAT
+Database/DatabaseSchema.sql
+Database/DatabaseFn.sql
+
 #ignore the os x useless file
 RistorNAT.app
 *DS_Store

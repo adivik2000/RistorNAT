@@ -19,7 +19,7 @@
 #ifndef seller_H
 #define seller_H
 
-#include "pluginInterface.h"
+#include "plugininterface.h"
 #include <QStandardItemModel>
 #include "ui_seller.h"
 
