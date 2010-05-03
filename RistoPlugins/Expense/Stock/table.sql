@@ -1,11 +1,11 @@
-/** @brief 
+/** @brief
  *
  * Dep: BasicGoods,UM
  */
 
 CREATE TABLE "stock"
 (
-    article CHARACTER VARYING(128) NOT NULL REFERENCES basic_good(description) MATCH
+    article CHARACTER VARYING(128) NOT NULL REFERENCES basic_good(name) MATCH
         SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
     quantity NUMERIC NOT NULL,
     um CHARACTER VARYING(5) REFERENCES basic_unit(short_name) MATCH SIMPLE

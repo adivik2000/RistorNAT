@@ -7,4 +7,4 @@ include(../../../common.pri)
 HEADERS += seller.h
 SOURCES += seller.cpp
 FORMS += seller.ui
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql function.sql

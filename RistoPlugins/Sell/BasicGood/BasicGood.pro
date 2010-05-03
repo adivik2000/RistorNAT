@@ -4,6 +4,5 @@
 TARGET = $$qtLibraryTarget(BasicGood)
 include(../../../common.pri)
 HEADERS += basicgood.h
-OTHER_FILES += database.txt
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql function.sql
 SOURCES += basicgood.cpp

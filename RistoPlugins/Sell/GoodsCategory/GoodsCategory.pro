@@ -4,5 +4,5 @@
 TARGET = $$qtLibraryTarget(GoodsCategory)
 include(../../../common.pri)
 HEADERS += goodscategory.h
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql
 SOURCES += goodscategory.cpp

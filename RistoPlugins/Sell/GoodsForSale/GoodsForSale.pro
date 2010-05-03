@@ -9,4 +9,4 @@ HEADERS += goodsforsale.h \
 SOURCES += goodsforsale.cpp \
     detail.cpp
 FORMS += detail.ui
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql

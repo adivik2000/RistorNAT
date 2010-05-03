@@ -23,15 +23,13 @@
 #include "ui_mainwindow.h"
 #include "ui_about.h"
 
-#include <simplequery.h>
-#include <simpleplainquery.h>
+#include <dbmanagement.h>
 
 #include <QMessageBox>
 #include <QPluginLoader>
 #include <QDir>
+#include <QFileDialog>
 #include <QDebug>
-#include <QProcess>
-#include <QProgressDialog>
 
 /** @brief MainWindow constructor
   * The constructor takes a QWidget as parameter, and use it as a parent
@@ -52,13 +50,18 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(QCoreApplication::applicationName()+ " " +
                    QCoreApplication::applicationVersion());
 
-    QWidget *mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
+    QWidget *mainWidget;
+    try {
+        mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
+    } catch (QString e) {
+        if (!setupDatabase())
+            return;
+        mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
+    }
 
-    if (unlikely (mainWidget == 0))
-        return;
+    Q_ASSERT(mainWidget != 0);
 
     mainWidget->setParent(this);
-
     setCentralWidget(mainWidget);
 }
 
@@ -69,22 +72,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete settingWindow;
-}
-
-/** @brief Show a warning message
-  * This function shows a warning message, using QMessageBox.
-  * @param generalText General information about the error
-  * @param informativeText More descriptive text about the error
-  */
-void MainWindow::showWarning(const QString& generalText,
-                             const QString& informativeText) const
-{
-    QMessageBox msgBox;
-    msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText(generalText);
-    msgBox.setInformativeText(informativeText);
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.exec();
 }
 
 /** @brief Load application-plugins
@@ -104,7 +91,6 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
     Q_UNUSED(menuBar);
     QTabWidget *tabWidget = new QTabWidget;
     tabWidget->setMovable(true);
-    connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
 
     QDir pluginsDir(qApp->applicationDirPath());
 
@@ -153,6 +139,7 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
      }
 
     m_pluginToClose = m_plugins.at(0);
+    connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
 
     return tabWidget;
 }
@@ -204,78 +191,6 @@ void MainWindow::about()
     delete box;
 }
 
-/** @brief Dump the database in a file
-  *
-  */
-void MainWindow::dump()
-{
-    QString file;
-    QString dir = QFileDialog::getExistingDirectory(this,
-        tr("Select output directory"), "~", QFileDialog::ShowDirsOnly);
-
-    if (unlikely(dir.isEmpty())) {
-        showWarning(tr("No directory selected"),tr("The dump isn't started"));
-        return;
-    }
-
-    QProcess pgdump;
-    pgdump.setProcessChannelMode(QProcess::MergedChannels);
-    pgdump.setStandardOutputFile(dir+"/MainWindow.sql");
-
-    connect(&pgdump,SIGNAL(finished(int,QProcess::ExitStatus)),
-            this,SLOT(dumpFinished(int,QProcess::ExitStatus)));
-
-    QStringList arg;
-
-    Settings sett;
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("PGPASSWORD", sett.getDbPassword());
-    pgdump.setProcessEnvironment(env);
-
-    arg << "-a"<< "--inserts"<< "-h" << sett.getDbHost() << "-p" << sett.getDbPort();
-    arg << "-U" << sett.getDbUser() << sett.getDbName();
-
-    pgdump.start("pg_dump", arg);
-
-    if (!pgdump.waitForStarted()) {
-#ifdef Q_OS_MAC
-        file = QFileDialog::getOpenFileName(this,tr("Select the pg_dump program"),
-                                            "/Library/PostgreSQL");
-#else /* Q_OS_MAC */
-        file = QFileDialog::getOpenFileName(this,tr("Select the pg_dump program"),
-                                            "");
-#endif /* Q_OS_MAC */
-        if (file.isEmpty()) {
-            showWarning(tr("No program selected"),tr("The dump isn't started"));
-            return;
-        }
-        pgdump.start(file,arg);
-    }
-
-    pgdump.waitForFinished(1000000);
-}
-
-/** @brief Show a popup for the finished dump
-  *
-  */
-void MainWindow::dumpFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-    Q_UNUSED(exitCode);
-    QMessageBox msgBox;
-
-    msgBox.setInformativeText(tr("Dump has finished"));
-    if (likely(exitStatus == QProcess::NormalExit))
-        msgBox.setDetailedText(tr("The status is: Normal Exit. You now have the"
-                               " file MainWindow.sql in the directory you "
-                               "selected."));
-    else
-        msgBox.setDetailedText(tr("The status is: Crash. Dump command has crashed"
-                               ", you doesn't have the MainWindow.sql file. "
-                               "Please, tell to the author."));
-
-    msgBox.setIcon(QMessageBox::Information);
-}
-
 /** @brief Setup the database
   *
   * Try to connect with the default parameters. If it fail, it ask for
@@ -287,10 +202,12 @@ void MainWindow::dumpFinished(int exitCode, QProcess::ExitStatus exitStatus)
 bool MainWindow::setupDatabase()
 {
     QMessageBox msgBox;
+    dbManagement ref;
 
     try {
-        connectDefault();
+        ref.connectDefault(m_con);
     } catch ( QString errorMessage ) {
+        Q_UNUSED(errorMessage);
         // Ask for a new installation
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setText(tr("Database doesn't exist"));
@@ -300,210 +217,28 @@ bool MainWindow::setupDatabase()
 
         int ret = msgBox.exec();
 
-        if (likely(ret == QMessageBox::Yes)) // New Installation
-            return installDBFromZero();
-        else
+        if (likely(ret == QMessageBox::Yes)) {// New Installation
+            QString dbfile = QFileDialog::getOpenFileName(0,
+                                                        tr("Select the"
+                                                           " database schema"));
+            if (dbfile.isEmpty())
+                return false;
+            QString fnfile = QFileDialog::getOpenFileName(0,
+                                                          tr("Select the"
+                                                             " database functions"));
+            if (fnfile.isEmpty())
+                return false;
+
+            QString dbcreat = QFileDialog::getOpenFileName(0,
+                                                        tr("Select the creation"
+                                                           " database file"));
+            if (dbcreat.isEmpty())
+                return false;
+
+            return ref.installDBFromZero(m_con,dbfile,fnfile,dbcreat);
+        } else
             return false;
     }
 
-    return checkDB();
-}
-
-/** @brief Try to connect with default login parameters
-  *
-  * @see Connection::doConnect
-  */
-void MainWindow::connectDefault()
-{
-    Settings sett;
-
-    m_con.setDBName(sett.getDbName());
-    m_con.setHost(sett.getDbHost());
-    m_con.setPassword(sett.getDbPassword());
-    m_con.setPort(sett.getDbPort().toInt());
-    m_con.setUser(sett.getDbUser());
-    m_con.setType("QPSQL");
-    m_con.doConnect();
-}
-
-/** @brief Check the database version
-  *
-  * The function upgrade it if its version is below MainWindow's version.
-  * @return true if the database is correctly installed and upgrade operations
-  * goes fine.
-  */
-bool MainWindow::checkDB()
-{
-    simpleQuery query("MainWindow_db_version");
-
-    QAbstractItemModel *model = query.getResult();
-
-    if (likely(model != 0)) {
-        QStringList actualVersion, lastVersion;
-        lastVersion << "0" << "4" << "1";
-
-        actualVersion << model->data(model->index(0,0)).toString();
-        actualVersion << model->data(model->index(0,1)).toString();
-        actualVersion << model->data(model->index(0,2)).toString();
-
-        if (actualVersion != lastVersion) {
-            delete model;
-            return upgradeFrom(actualVersion, lastVersion);
-        }
-        return true;
-    } else {
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(tr("Error executing a query"));
-        msgBox.setInformativeText(query.getErrorMessage());
-        msgBox.setStandardButtons(QMessageBox::Ok);
-
-        msgBox.exec();
-    }
-
-    return false;
-}
-
-bool MainWindow::upgradeFrom(const QStringList &actualVersion,
-                            const QStringList &lastVersion)
-{
-    Q_UNUSED(actualVersion);
-    Q_UNUSED(lastVersion);
-
-    return true;
-}
-
-/** @brief Try to install the database with the default postgreSQL user
-  *
-  * @return true if the database is correctly installed
-  * @see execSQLFile
-  */
-bool MainWindow::installDBFromZero()
-{
-    bool ok;
-    QString username = QInputDialog::getText(0, tr("Default User name"),
-                                         tr("User name:"), QLineEdit::Normal,
-                                         "postgres", &ok);
-    if (unlikely(!ok))
-        return false;
-
-    QString password = QInputDialog::getText(0, tr("Default Password"),
-                                             tr("Password:"),
-                                             QLineEdit::PasswordEchoOnEdit,
-                                             "postgres", &ok);
-    if (unlikely(!ok))
-        return false;
-
-    QString DBName = QInputDialog::getText(0, tr("Default Database"),
-                                             tr("Name of the default database:"),
-                                             QLineEdit::Normal,
-                                             "postgres", &ok);
-    if (unlikely(!ok))
-        return false;
-
-    m_con.setUser(username);
-    m_con.setPassword(password);
-    m_con.setDBName(DBName);
-
-    try {
-        if (unlikely(! m_con.canConnect()))
-            return false;
-
-        if ( ! m_con.doConnect() )
-            return false;
-    } catch (QString e) {
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(tr("Error when trying to connect to postgres database"));
-        msgBox.setInformativeText(e);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-
-        msgBox.exec();
-        return false;
-    }
-
-    /** @todo This part is executed also when a user johnny already exists, and
-      * the function returns without the creation of the database.
-      */
-    if ( ! execSQLFile("DatabaseCreation.sql") )
-        return false;
-
-    m_con.closeConnection();
-
-    try {
-        connectDefault();
-    } catch (QString e) {
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText(tr("Error when trying to connect to MainWindow database"));
-        msgBox.setInformativeText(e);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-
-        msgBox.exec();
-        return false;
-    }
-
-    if (unlikely(! execSQLFile("DatabaseSchema.sql")))
-        return false;
-
-    if (unlikely(! execSQLFile("data_example_dump.sql")))
-        return false;
-
-    return true;
-}
-
-/** @brief Execute an entire file as SQL commands
-  *
-  * @return true if the file is found and if it executed correctly.
-  */
-bool MainWindow::execSQLFile(const QString& fileName) {
-    QFile file(m_dbPath + "/" + fileName);
-    QString line = QString::null;
-
-    Q_ASSERT(file.exists());
-
-    if ( likely(file.open(QIODevice::ReadOnly | QIODevice::Text)) ) {
-        QTextStream t( &file );
-        while (line += t.readLine(), !line.isNull()) {
-
-            // Ignore line with comments (All lines starting with -)
-            if (line.isEmpty() || line.at(0) == '-') {
-                line = QString::null;
-                continue;
-            }
-
-            // When there is a ; and we're not in a function, the line must be
-            // executed.
-            if (line.at(line.size() - 1 ) == ';') {
-                // If the line contains two $ symbol, we're in a function and
-                // we need to continue parsing. Otherwise, we can execute.
-                if (line.count("$$") == 1)
-                    continue;
-
-                // Execute the line
-                simplePlainQuery query(line);
-
-                if (unlikely(!query.execute())) {
-                    QMessageBox msgBox;
-                    msgBox.setIcon(QMessageBox::Warning);
-                    msgBox.setText(tr("Error executing a query"));
-                    msgBox.setInformativeText(query.getErrorMessage());
-                    msgBox.setStandardButtons(QMessageBox::Ok);
-
-                    msgBox.exec();
-                    file.close();
-                    return false;
-                }
-
-                // After it is executed, we need to forget what line contains,
-                // and start from top again.
-                line = QString::null;
-            }
-        }
-        file.close();
-
-        return true;
-    }
-
-    return false;
+    return ref.checkDB("ristornat_db_version",QStringList()<<"0"<<"5"<<"0");
 }

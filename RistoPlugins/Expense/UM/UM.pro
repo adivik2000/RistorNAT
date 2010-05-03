@@ -6,4 +6,4 @@ include(../../../common.pri)
 
 HEADERS += um.h
 SOURCES += um.cpp
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql

@@ -6,7 +6,7 @@
 -- or more basic component.
 CREATE TABLE "article_component"
 (
-  basic_component CHARACTER VARYING(128) REFERENCES basic_good(description) NOT NULL,
+  basic_component CHARACTER VARYING(128) REFERENCES basic_good(name) NOT NULL,
   selling_component INTEGER REFERENCES good_for_sale(id)
     MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
   quantity NUMERIC NOT NULL,

@@ -22,7 +22,6 @@
 
 #include <QtGui>
 #include <QTabWidget>
-#include <QProcess>
 #include "settingsui.h"
 #include <QObject>
 #include <QTabWidget>
@@ -132,24 +131,14 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void showWarning(const QString& generalText,
-                     const QString& informativeText) const;
+    bool setupDatabase();
 
 private slots:
     void openSettings();
     void about();
-    void dump();
-    void dumpFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void pageChanged(int index);
 
 private:
-    bool setupDatabase();
-    void connectDefault();
-    bool checkDB();
-    bool upgradeFrom(const QStringList &actualVersion,
-                     const QStringList &lastVersion);
-    bool installDBFromZero();
-    bool execSQLFile(const QString& fileName);
     Ui::MainWindow *ui; /**< @brief GUI */
     QPointer<settingsUi> settingWindow; /**< @brief Settings GUI */
     QWidget* loadApp(QMenuBar *menuBar, QToolBar *toolBar);

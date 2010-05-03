@@ -20,7 +20,7 @@
 #define SETTINGSUI_H
 
 #include <QtGui/QDialog>
-#include "settings.h"
+#include <settings.h>
 
 namespace Ui {
     class settingsUi;

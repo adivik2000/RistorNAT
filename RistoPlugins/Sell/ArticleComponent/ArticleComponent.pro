@@ -7,4 +7,4 @@ include(../../../common.pri)
 HEADERS += articlecomponent.h
 SOURCES += articlecomponent.cpp
 FORMS += articlecomponent.ui
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql

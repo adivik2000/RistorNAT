@@ -32,6 +32,7 @@ namespace Ui {
 
 class articleComponent : public pluginInterface {
     Q_OBJECT
+    Q_INTERFACES(pluginInterface)
 public:
     articleComponent(QWidget *parent = 0);
     ~articleComponent();

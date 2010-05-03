@@ -8,10 +8,8 @@ DESTDIR = "$$ROOT"
 SOURCES += main.cpp \
     mainwindow.cpp \
     stackedwcontainer.cpp \
-    settings.cpp \
     settingsui.cpp
 HEADERS += mainwindow.h \
-    settings.h \
     settingsui.h \
     stackedwcontainer.h \
     plugininterface.h

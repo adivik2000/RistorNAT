@@ -7,4 +7,4 @@ include(../../../common.pri)
 HEADERS += managementcost.h
 SOURCES += managementcost.cpp
 FORMS += managementcost.ui
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql function.sql

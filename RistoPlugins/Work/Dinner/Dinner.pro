@@ -9,4 +9,4 @@ LIBS += -L../ -lUtilWork
 
 HEADERS += dinner.h
 TRANSLATIONS += $$TARGET_it.ts
-OTHER_FILES += database.txt
+OTHER_FILES += table.sql function.sql
