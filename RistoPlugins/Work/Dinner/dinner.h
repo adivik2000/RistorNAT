@@ -45,7 +45,9 @@ public:
     /** @brief Constructor
       * @param parent Parent of the plugin
       */
-    Dinner(QWidget *parent = 0): workUi(parent) { }
+    Dinner(QWidget *parent = 0): workUi(parent) {
+        connect(m_ui->dateEdit,SIGNAL(dateChanged(QDate)),this,SLOT(dateChanged(QDate)));
+    }
 
     /** @brief Deconstructor
       *
@@ -59,11 +61,11 @@ public:
 
     QIcon icon() { return QIcon(":/listino48x48.png"); }
 
-private slots:
+protected slots:
     virtual void editingFinished(QStandardItemModel *model, const QDate& date,
                                  int places);
     virtual void getSoldAtDate(QAbstractItemModel*& model, const QDate& date,
-                               int &places);
+                               int& places);
 };
 
 /** @brief Slot called when the user finish the edit
@@ -76,8 +78,7 @@ private slots:
 inline void Dinner::editingFinished(QStandardItemModel *model,const QDate& date,
                                     int places)
 {
-    workUi::saveSell(model,"single_dinner_sell",
-                            "dinner_ins_upd",date,places);
+    workUi::saveSell(model,"single_dinner_sell", "dinner_ins_upd",date,places);
 }
 
 /** @brief Get the articles sold at certain date

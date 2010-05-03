@@ -45,7 +45,6 @@ workUi::workUi(QWidget *parent) :
 
     m_ui->tableComanda->setItemDelegateForColumn(1,comboDel);
     m_ui->tableComanda->setItemDelegateForColumn(2,spinDel);
-    m_ui->dateEdit->setDate(QDate::currentDate());
 }
 
 /** @brief Deconstructor
@@ -179,7 +178,7 @@ void workUi::save()
 
     m_modified = false;
 }
-
+#include <QDebug>
 /** @brief Get a new information for the new date
   *
   * With the signal dateHasChanged, the function will convert the model

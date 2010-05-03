@@ -160,22 +160,6 @@
  </resources>
  <connections>
   <connection>
-   <sender>dateEdit</sender>
-   <signal>dateChanged(QDate)</signal>
-   <receiver>workUi</receiver>
-   <slot>dateChanged(QDate)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>130</x>
-     <y>45</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>221</x>
-     <y>297</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>pushAdd</sender>
    <signal>clicked()</signal>
    <receiver>workUi</receiver>

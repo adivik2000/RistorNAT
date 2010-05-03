@@ -20,9 +20,12 @@
 #define WORKUI_H
 
 #include "plugininterface.h"
+#include "ui_workui.h"
+
 #include <QtGui/QWidget>
 #include <QDate>
 #include <QStandardItemModel>
+
 #include <workdelegate.h>
 #include <simplecombo.h>
 
@@ -63,7 +66,7 @@ public slots:
     void updateAmount(QStandardItem *item);
     void dateChanged(const QDate& date);
 
-private slots:
+protected slots:
     virtual void editingFinished(QStandardItemModel*,const QDate&, int) = 0;
     virtual void getSoldAtDate(QAbstractItemModel*&, const QDate&, int& ) = 0;
 
@@ -76,8 +79,6 @@ protected:
                   const QString& fnInsUpd,const QDate& date, int places);
     void getSell(QAbstractItemModel *&model,const QString& fnGetInformation,
                  const QString& fnGetPlaces, const QDate& date, int &places);
-
-private:
     bool askToSave();
     QMap<QString,int> m_articlesInserted;
     QDate m_date; /**< @brief Date */

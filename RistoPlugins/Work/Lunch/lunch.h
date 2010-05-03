@@ -45,7 +45,9 @@ public:
     /** @brief Constructor
       * @param parent Parent of the Plugin
       */
-    Lunch(QWidget *parent = 0): workUi(parent) { }
+    Lunch(QWidget *parent = 0): workUi(parent) {
+        connect(m_ui->dateEdit,SIGNAL(dateChanged(QDate)),this,SLOT(dateChanged(QDate)));
+    }
 
     /** @brief Deconstructor
       *
@@ -59,7 +61,7 @@ public:
 
     QIcon icon() { return QIcon(":/listino48x48.png"); }
 
-private slots:
+protected slots:
     virtual void editingFinished(QStandardItemModel *model, const QDate& date,
                                  int places);
     virtual void getSoldAtDate(QAbstractItemModel*& model, const QDate& date,
