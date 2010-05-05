@@ -60,6 +60,9 @@ public:
 
     virtual QString family() = 0;
 
+    virtual void aboutToBeOpened() { }
+    virtual void aboutToBeClosed() { }
+
 protected:
     QToolBar *m_toolBar;
     QList<QAction*> m_listAction;

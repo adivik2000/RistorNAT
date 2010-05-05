@@ -46,7 +46,8 @@ public:
 
     virtual ~stackedWContainer();
 
-    void open();
+    void aboutToBeOpened();
+    void aboutToBeClosed();
     void add(pluginInterface *child);
 
 protected slots:

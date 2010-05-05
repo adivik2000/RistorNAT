@@ -115,18 +115,18 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
 
          if (likely(child != 0)) {
              QString family = child->family();
+             child->registerToolBar(toolBar);
 
              if (! m_fam.contains(family)) {
                 stackedWContainer *cont = new stackedWContainer(tabWidget);
-                tabWidget->addTab(cont,family);
+                m_numberFam.insert(tabWidget->addTab(cont,family),family);
                 m_fam.insert(family,cont);
              }
 
              stackedWContainer *cont = m_fam.value(family);
              cont->add(child);
 
-             child->registerToolBar(toolBar);
-             m_plugins.append(child);
+             currentPage = cont;
          } else {
              QMessageBox msgBox;
              msgBox.setIcon(QMessageBox::Warning);
@@ -138,7 +138,6 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
          }
      }
 
-    m_pluginToClose = m_plugins.at(0);
     connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
 
     return tabWidget;
@@ -157,9 +156,13 @@ void MainWindow::dump()
   */
 void MainWindow::pageChanged(int index)
 {
-    m_pluginToClose = m_plugins.at(index);
+    Q_ASSERT(currentPage != 0);
+    currentPage->aboutToBeClosed();
 
-    m_fam.value(m_pluginToClose->family())->open();
+    currentPage = m_fam.value(m_numberFam.value(index),0);
+    Q_ASSERT (currentPage != 0);
+
+    currentPage->aboutToBeOpened();
 }
 
 /** @brief Open the settings window

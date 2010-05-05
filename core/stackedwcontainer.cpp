@@ -103,14 +103,19 @@ void stackedWContainer::changePage(QListWidgetItem *current,
     if (!current)
          current = previous;
 
-    QWidget *widgetToClose = m_pagesWidget->currentWidget();
+    pluginInterface *widgetToClose = qobject_cast<pluginInterface*>(
+            m_pagesWidget->currentWidget());
+
+    aboutToBeClosed();
+
     m_pagesWidget->removeWidget(widgetToClose);
 
     m_position = m_contentsWidget->row(current);
 
     if (likely(m_position != -1)) {
         pluginInterface *child = m_plugins.at(m_position);
-
+        Q_ASSERT(child != 0);
+        child->aboutToBeOpened();
         m_pagesWidget->insertWidget(m_position, child);
         m_pagesWidget->setCurrentIndex(m_position);
     }
@@ -119,9 +124,22 @@ void stackedWContainer::changePage(QListWidgetItem *current,
 /** @brief Open the previously clicked item
   *
   */
-void stackedWContainer::open()
+void stackedWContainer::aboutToBeOpened()
 {
     QListWidgetItem *item = m_contentsWidget->item(m_position);
-    m_contentsWidget->setCurrentItem(0);
     m_contentsWidget->setCurrentItem(item);
+
+    pluginInterface *child = m_plugins.at(m_position);
+
+    if (child != 0)
+        child->aboutToBeOpened();
+}
+
+void stackedWContainer::aboutToBeClosed()
+{
+    pluginInterface *widgetToClose = qobject_cast<pluginInterface*>(
+            m_pagesWidget->currentWidget());
+
+    if (widgetToClose != 0)
+        widgetToClose->aboutToBeClosed();
 }

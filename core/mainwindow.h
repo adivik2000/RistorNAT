@@ -144,11 +144,8 @@ private:
     QPointer<settingsUi> settingWindow; /**< @brief Settings GUI */
     QWidget* loadApp(QMenuBar *menuBar, QToolBar *toolBar);
     Connection m_con; /**< Default connection */
-    QString m_pluginsPath; /**< Plugins path */
-    QString m_iconPath; /**< Icon path */
-    QString m_dbPath; /**< Database files path */
-    QList<pluginInterface*> m_plugins; /**< List of plugins */
-    pluginInterface *m_pluginToClose; /**< Plugin active */
+    stackedWContainer *currentPage;
+    QMap<int,QString> m_numberFam;
     QMap<QString,stackedWContainer*> m_fam;
 };
 
