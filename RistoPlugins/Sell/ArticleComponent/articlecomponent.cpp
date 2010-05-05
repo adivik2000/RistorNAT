@@ -80,4 +80,9 @@ void articleComponent::sellingChanged()
     ui->tableView->setDefaultValue(1,pk,true);
 }
 
+void articleComponent::aboutToBeOpened()
+{
+    ui->comboSelling->refresh();
+}
+
 Q_EXPORT_PLUGIN2(articlecomponent, articleComponent);

@@ -46,6 +46,8 @@ public:
 
     QString family() { return "Sell"; }
 
+    void aboutToBeOpened();
+
 public slots:
     void sellingChanged();
 

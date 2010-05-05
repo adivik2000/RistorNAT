@@ -390,4 +390,9 @@ void managementCost::listPressed()
     }
 }
 
+void managementCost::aboutToBeOpened()
+{
+    ui.comboSeller->refresh();
+}
+
 Q_EXPORT_PLUGIN2(managementcost, managementCost);

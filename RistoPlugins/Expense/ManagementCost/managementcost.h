@@ -61,6 +61,7 @@ public:
     QIcon icon() { return QIcon(":/cassa48x48.png");  }
 
     QString family() { return "Expense"; }
+    void aboutToBeOpened();
 
 public slots:
     void okPressed();
