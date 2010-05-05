@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     QCoreApplication::setOrganizationName("nat");
     QCoreApplication::setOrganizationDomain("nat.vacau.com");
-    QCoreApplication::setApplicationName("MainWindow");
+    QCoreApplication::setApplicationName("RistorNAT");
     QCoreApplication::setApplicationVersion("0.5.0");
 
     ui->setupUi(this);
