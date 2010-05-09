@@ -27,7 +27,8 @@ $$ LANGUAGE SQL;
 CREATE OR REPLACE FUNCTION report_management_category(p_date_from DATE,
             p_date_to DATE, p_category VARCHAR)
     RETURNS NUMERIC AS $$
-        SELECT SUM(price) FROM document_purchasing_cost AS d, row_purchasing_cost AS r
-        WHERE r.document=d.document_number AND document_date<=$2 AND document_date>=$1;
+        SELECT SUM(r.price) FROM document_purchasing_cost AS d, row_purchasing_cost AS r
+        WHERE r.document=d.id AND d.document_date<=$2 AND d.document_date>=$1
+        AND r.category=$3;
 $$ LANGUAGE SQL;
 
