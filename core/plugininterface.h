@@ -65,7 +65,6 @@ public:
 
 protected:
     QToolBar *m_toolBar;
-    QList<QAction*> m_listAction;
 };
 
 Q_DECLARE_INTERFACE(pluginInterface,

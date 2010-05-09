@@ -147,7 +147,7 @@ void MainWindow::dump()
 {
     dbManagement ref;
 
-    ref.dump();
+    ref.dump("RistorNAT.sql");
 }
 
 /** @brief Slot for closing active plugin when the page is changed
@@ -192,7 +192,7 @@ void MainWindow::about()
     about->labelVersion->setText("Enjoy with " +
                                  QCoreApplication::applicationName() +
                                  " " + QCoreApplication::applicationVersion());
-    about->labelIcon->setPixmap(windowIcon().pixmap(32,32,QIcon::Normal,QIcon::On));
+    about->labelIcon->setPixmap(windowIcon().pixmap(128,128,QIcon::Normal,QIcon::On));
     about->labelIcon->setEnabled(true);
 
     box->exec();

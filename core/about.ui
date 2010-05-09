@@ -10,6 +10,12 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="maximumSize">
    <size>
     <width>640</width>
@@ -85,10 +91,10 @@ RistorNAT is distributed in the hope that it will be useful, but&lt;br&gt; WITHO
   <widget class="QLabel" name="labelVersion">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>390</y>
-     <width>631</width>
-     <height>51</height>
+     <x>180</x>
+     <y>410</y>
+     <width>181</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -103,8 +109,8 @@ RistorNAT is distributed in the hope that it will be useful, but&lt;br&gt; WITHO
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>131</width>
-     <height>121</height>
+     <width>191</width>
+     <height>241</height>
     </rect>
    </property>
    <property name="text">
