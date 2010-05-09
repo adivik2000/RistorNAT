@@ -1,3 +1,13 @@
+CREATE OR REPLACE FUNCTION set_amount_document_purchasing(p_document INTEGER,
+        p_amount NUMERIC) RETURNS VOID AS $$
+        UPDATE document_purchasing_cost SET amount=$2 WHERE id = $1;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION set_amount_document_goods(p_document INTEGER,
+        p_amount NUMERIC) RETURNS VOID AS $$
+        UPDATE document_goods_cost SET amount=$2 WHERE id = $1;
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION get_amount_document_purchasing(p_document INTEGER)
     RETURNS NUMERIC AS $$
         SELECT amount FROM document_purchasing_cost WHERE id = $1;
@@ -84,90 +94,23 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_document_goods_amount_and_stocks()
+CREATE OR REPLACE FUNCTION update_document_goods_stocks()
     RETURNS TRIGGER AS $$
     DECLARE
         tot_amount NUMERIC;
     BEGIN
         IF TG_OP = 'INSERT' THEN
-            SELECT amount INTO tot_amount FROM document_goods_cost
-                WHERE id=NEW.document;
-
-            IF tot_amount IS NULL THEN
-                tot_amount := 0;
-            END IF;
-
-            tot_amount := tot_amount + NEW.price;
-
-            UPDATE document_goods_cost
-                SET amount=tot_amount WHERE id=NEW.document;
-
             PERFORM * FROM update_stock(NEW.quantity, NEW.article, NEW.um,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
-            SELECT amount INTO tot_amount FROM document_goods_cost
-                WHERE id=NEW.document;
-
-            IF tot_amount IS NULL THEN
-                tot_amount := 0;
-            END IF;
-
-            tot_amount := tot_amount - OLD.price;
-            tot_amount := tot_amount + NEW.price;
-
-            UPDATE document_goods_cost
-                SET amount=tot_amount WHERE id=NEW.document;
-
             PERFORM * FROM update_stock(OLD.quantity, OLD.article, OLD.um,FALSE);
             PERFORM * FROM update_stock(NEW.quantity, NEW.article, NEW.um,TRUE);
         ELSE
-            SELECT amount INTO tot_amount FROM document_goods_cost
-                WHERE id=OLD.document;
-
-            IF tot_amount IS NULL THEN
-                tot_amount := 0;
-            END IF;
-
-            tot_amount := tot_amount - OLD.price;
-
-            UPDATE document_goods_cost
-                SET amount=tot_amount WHERE id=OLD.document;
-
             PERFORM * FROM update_stock(OLD.quantity, OLD.article, OLD.um,FALSE);
         END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_document_purchasing_amount()
-    RETURNS TRIGGER AS $$
-    DECLARE
-    tot_amount NUMERIC;
-    BEGIN
-
-        IF TG_OP = 'INSERT' THEN
-            SELECT amount INTO tot_amount FROM document_purchasing_cost
-                WHERE id=NEW.document;
-
-            UPDATE document_purchasing_cost SET amount=tot_amount+NEW.price
-            WHERE id=NEW.document;
-        ELSIF TG_OP = 'UPDATE' THEN
-            SELECT amount INTO tot_amount FROM document_purchasing_cost
-                WHERE id=NEW.document;
-            UPDATE document_purchasing_cost SET amount=tot_amount-OLD.price+NEW.price
-            WHERE id=NEW.document;
-        ELSE
-            SELECT amount INTO tot_amount FROM document_purchasing_cost
-            WHERE id=OLD.document;
-            UPDATE document_purchasing_cost SET amount=tot_amount-OLD.price
-            WHERE id=OLD.document;
-        END IF;
-    END;
-$$ LANGUAGE 'plpgsql';
-
-CREATE TRIGGER update_amount_document_purchasing AFTER INSERT OR UPDATE OR
-    DELETE ON row_purchasing_cost
-    FOR EACH ROW EXECUTE PROCEDURE update_document_purchasing_amount();
-
 CREATE TRIGGER update_amount_document_goods AFTER INSERT OR UPDATE OR
     DELETE ON row_goods_cost
-    FOR EACH ROW EXECUTE PROCEDURE update_document_goods_amount_and_stocks();
+    FOR EACH ROW EXECUTE PROCEDURE update_document_goods_stocks();

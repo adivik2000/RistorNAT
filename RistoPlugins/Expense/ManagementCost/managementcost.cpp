@@ -17,6 +17,7 @@
  *  along with RistorNAT.If not, see <http://www.gnu.org/licenses/>.
  */
 #include "managementcost.h"
+#include "updateamountdelegate.h"
 
 #include <QMessageBox>
 #include <QDialogButtonBox>
@@ -27,44 +28,39 @@
 #include <simplequery.h>
 #include <workdelegate.h>
 
-
 /** @brief Constructor
   *
   * Build a Cost interface.
   */
 managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
 {
-    m_amount = 0.0;
-    m_columnPrice = 4;
-
     ui.setupUi(this);
     ui.line_number->setValidator(new QIntValidator(0,1000000,ui.line_number));
     ui.comboSeller->initialize("supplier",0,0);
 
     m_documentId = QVariant();
 
-    m_actOk = new QAction(QIcon(":/conferma24x24.png"),tr("Ok"),this);
-    m_actUndo = new QAction(QIcon(":/pulisci24x24.png"),tr("Clean"),this);
-    m_actDelete = new QAction(QIcon(":/elimina24x24.png"),tr("Delete"),this);
-    m_actList = new QAction(QIcon(":/account.png"),tr("List document"),this);
+    QAction *actOk = new QAction(QIcon(":/conferma24x24.png"),tr("Ok"),this);
+    QAction *actUndo = new QAction(QIcon(":/pulisci24x24.png"),tr("Clean"),this);
+    QAction *actDelete = new QAction(QIcon(":/elimina24x24.png"),tr("Delete"),this);
+    QAction *actList = new QAction(QIcon(":/account.png"),tr("List document"),this);
 
-    m_listAction << m_actOk << m_actUndo << m_actDelete << m_actList;
+    QToolBar *toolBar = new QToolBar(this);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolBar->addAction(actOk);
+    toolBar->addAction(actUndo);
+    toolBar->addAction(actDelete);
+    toolBar->addAction(actList);
 
-    connect(m_actOk,SIGNAL(triggered()),this,SLOT(okPressed()));
-    connect(m_actUndo,SIGNAL(triggered()),this,SLOT(undoPressed()));
-    connect(m_actDelete,SIGNAL(triggered()),this,SLOT(deletePressed()));
-    connect(m_actList,SIGNAL(triggered()),this,SLOT(listPressed()));
+    ui.toolLayout->addWidget(toolBar);
+
+    connect(actOk,SIGNAL(triggered()),this,SLOT(okPressed()));
+    connect(actUndo,SIGNAL(triggered()),this,SLOT(undoPressed()));
+    connect(actDelete,SIGNAL(triggered()),this,SLOT(deletePressed()));
+    connect(actList,SIGNAL(triggered()),this,SLOT(listPressed()));
+    connect(ui.tableView,SIGNAL(afterSave()),this,SLOT(updateAmount()));
 
     ui.tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-
-    connect(ui.tableView,SIGNAL(afterInsert(const QList<QStandardItem*>&)),
-            this,SLOT(updateAmountForIns(const QList<QStandardItem*>&)));
-    connect(ui.tableView,SIGNAL(afterDelete(const QList<QStandardItem*>&)),
-            this,SLOT(updateAmountForDel(const QList<QStandardItem*>&)));
-    connect(ui.tableView,SIGNAL(afterEdit(const QList<QStandardItem*>&,
-                                          const QList<QStandardItem*>&)),
-            this,SLOT(updateAmountForEdit(const QList<QStandardItem*>&,
-                                          const QList<QStandardItem*>&)));
 
     m_comboCategory = new comboBoxDelegate("cost_category",0,0,this);
     m_comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
@@ -75,9 +71,7 @@ managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
   */
 managementCost::~managementCost()
 {
-    foreach(QAction *act, m_listAction) {
-        delete act;
-    }
+
 }
 
 /** @brief Retranslate the Ui
@@ -130,18 +124,31 @@ void managementCost::goPressed()
     m_documentId = populateTable(funcName[radioPurch],tableName[radioPurch],
                                  amountName[radioPurch]);
 
-    if (! m_documentId.isValid())
-        return;
-
     if (radioPurch) {
+        updateAmountDelegate *del = new updateAmountDelegate(ui.lcdNumber,this);
+        ui.tableView->setItemDelegateForColumn(3,del);
         ui.tableView->setItemDelegateForColumn(2,m_comboCategory);
+
     } else {
         ui.tableView->setItemDelegateForColumn(2,m_comboGood);
         ui.tableView->setItemDelegateForColumn(4,m_comboUM);
     }
 
+    if ( ! m_documentId.isValid()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText(tr("Something goes wrong"));
+        msgBox.setInformativeText(tr("The document id isn't valid. Your changes"
+                                     "will not be saved correctly"));
+        msgBox.setStandardButtons(QMessageBox::Ok);
+
+        msgBox.exec();
+    }
+
     ui.tableView->setDefaultValue(1,m_documentId,true);
     ui.tableView->setDefaultValue(0,QVariant(),true);
+
+    ui.tableView->setEnabled(true);
 }
 
 /** @brief Get the information from database
@@ -200,8 +207,8 @@ QVariant managementCost::populateTable(const QString& functionName,
         msgBox.exec();
     }
 
-    m_amount = model->data(model->index(0,0)).toDouble();
-    ui.lcdNumber->display(m_amount);
+    double amount = model->data(model->index(0,0)).toDouble();
+    ui.lcdNumber->display(amount);
 
     enableHeader(false);
     delete model;
@@ -221,47 +228,6 @@ void managementCost::enableHeader(bool enable)
     ui.radioGoods->setEnabled(enable);
     ui.radioPurchasing->setEnabled(enable);
     ui.btnGo->setEnabled(enable);
-}
-
-/** @brief Update amount after an insert
-  *
-  * @param list New row inserted, which in position 3 has price
-  */
-void managementCost::updateAmountForIns(const QList<QStandardItem*> &list)
-{
-    if (list.count()==0)
-        return;
-    Q_ASSERT(list.count()>m_columnPrice);
-    m_amount += list.at(m_columnPrice)->text().toDouble();
-    ui.lcdNumber->display(m_amount);
-}
-
-/** @brief Update amount after an edit
-  *
-  * @param before Row before edit
-  * @param after Row after edit
-  */
-void managementCost::updateAmountForEdit(const QList<QStandardItem *> &before,
-                                 const QList<QStandardItem *> &after)
-{
-    if (before.count() == 0 || after.count() == 0)
-        return;
-    Q_ASSERT(before.count()>m_columnPrice && after.count()>m_columnPrice);
-    m_amount -= before.at(m_columnPrice)->text().toDouble();
-    m_amount += after.at(m_columnPrice)->text().toDouble();
-
-    ui.lcdNumber->display(m_amount);
-}
-
-/** @brief Update amount after a delete
-  *
-  * @brief list Row deleted
-  */
-void managementCost::updateAmountForDel(const QList<QStandardItem*> &list)
-{
-    Q_ASSERT(list.count()>m_columnPrice);
-    m_amount -= list.at(m_columnPrice)->text().toDouble();
-    ui.lcdNumber->display(m_amount);
 }
 
 /** @brief Save the changes
@@ -288,9 +254,9 @@ void managementCost::undoPressed()
     enableHeader(true);
 
     ui.tableView->clear();
+    ui.tableView->setEnabled(false);
 
     m_documentId = QVariant();
-    m_amount = 0.0;
 }
 
 /** @brief Delete a document
@@ -387,6 +353,27 @@ void managementCost::listPressed()
         ui.lcdNumber->display(amount.toDouble());
 
         goPressed();
+    }
+}
+
+void managementCost::updateAmount()
+{
+    Q_ASSERT(m_documentId.isValid());
+    static char const * const fnName[2] = {"set_amount_document_goods",
+                                           "set_amount_document_purchasing" };
+    paramList param;
+    param.append(m_documentId);
+    param.append(ui.lcdNumber->value());
+    simpleQuery query(fnName[ui.radioPurchasing->isChecked()],param);
+
+    if ( ! query.execute() ) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText(tr("Error executing a query"));
+        msgBox.setInformativeText(query.getErrorMessage());
+        msgBox.setStandardButtons(QMessageBox::Ok);
+
+        msgBox.exec();
     }
 }
 
