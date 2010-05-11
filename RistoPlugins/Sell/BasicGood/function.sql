@@ -1,3 +1,16 @@
+CREATE OR REPLACE FUNCTION check_good_in_doc(p_good VARCHAR)
+    RETURNS BOOLEAN AS $$
+    DECLARE
+    BEGIN
+        PERFORM * FROM row_goods_cost WHERE good=p_good;
+        IF FOUND THEN
+            RETURN TRUE;
+        ELSE
+            RETURN FALSE;
+        END IF;
+    END;
+$$ LANGUAGE 'plpgsql';
+
 CREATE OR REPLACE FUNCTION article_to_stock()
     RETURNS TRIGGER AS $$
     DECLARE

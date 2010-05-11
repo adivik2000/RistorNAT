@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2009 Natale Patriciello <kronat@tiscali.it>
+ *  Copyright (c) 2010 Natale Patriciello <kronat@tiscali.it>
  *
  *  This file is part of RistorNAT.
  *
@@ -20,6 +20,8 @@
 #define BASICGOOD_H
 
 #include "plugininterface.h"
+
+class simpleTable;
 
 /** @brief Store and retrieve your basic good [Sell set]
   *
@@ -49,6 +51,12 @@ public:
     QIcon icon() { return QIcon(":/codice_a_barre48x48.png"); }
 
     QString family() { return "Sell"; }
+
+public slots:
+    void deleteFromStock();
+
+private:
+    simpleTable *m_table;
 };
 
 #endif // BASICGOOD_H
