@@ -3,8 +3,8 @@
 # -------------------------------------------------
 TARGET = $$qtLibraryTarget(ArticleComponent)
 include(../../../common.pri)
-
 HEADERS += articlecomponent.h
 SOURCES += articlecomponent.cpp
 FORMS += articlecomponent.ui
-OTHER_FILES += table.sql
+OTHER_FILES += table.sql \
+    function.sql
