@@ -100,12 +100,12 @@ CREATE OR REPLACE FUNCTION update_document_goods_stocks()
         tot_amount NUMERIC;
     BEGIN
         IF TG_OP = 'INSERT' THEN
-            PERFORM * FROM update_stock(NEW.quantity, NEW.article, NEW.um,TRUE);
+            PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
-            PERFORM * FROM update_stock(OLD.quantity, OLD.article, OLD.um,FALSE);
-            PERFORM * FROM update_stock(NEW.quantity, NEW.article, NEW.um,TRUE);
+            PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
+            PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
         ELSE
-            PERFORM * FROM update_stock(OLD.quantity, OLD.article, OLD.um,FALSE);
+            PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
         END IF;
         RETURN NULL;
     END;

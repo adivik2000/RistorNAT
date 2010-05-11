@@ -17,7 +17,6 @@
  *  along with RistorNAT.If not, see <http://www.gnu.org/licenses/>.
  */
 #include "managementcost.h"
-#include "updateamountdelegate.h"
 
 #include <QMessageBox>
 #include <QDialogButtonBox>
@@ -26,7 +25,6 @@
 
 #include <advancedtable.h>
 #include <simplequery.h>
-#include <workdelegate.h>
 
 /** @brief Constructor
   *
@@ -65,6 +63,8 @@ managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
     m_comboCategory = new comboBoxDelegate("cost_category",0,0,this);
     m_comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
     m_comboGood = new comboBoxDelegate("basic_good",0,0,this);
+    m_purchDel = new updateAmountPurchDelegate(ui.lcdNumber,this);
+    m_goodsDel = new updateAmountGoodsDelegate(ui.lcdNumber,this);
 }
 
 /** @brief Deconstructor
@@ -125,13 +125,15 @@ void managementCost::goPressed()
                                  amountName[radioPurch]);
 
     if (radioPurch) {
-        updateAmountDelegate *del = new updateAmountDelegate(ui.lcdNumber,this);
-        ui.tableView->setItemDelegateForColumn(3,del);
+        ui.tableView->setItemDelegateForColumn(3,m_purchDel);
         ui.tableView->setItemDelegateForColumn(2,m_comboCategory);
 
     } else {
         ui.tableView->setItemDelegateForColumn(2,m_comboGood);
         ui.tableView->setItemDelegateForColumn(4,m_comboUM);
+        ui.tableView->setItemDelegateForColumn(5,m_goodsDel);
+        for (int i=0;i<ui.tableView->model()->columnCount();i++)
+            ui.tableView->setColumnWidth(i,100);
     }
 
     if ( ! m_documentId.isValid()) {
@@ -275,8 +277,18 @@ void managementCost::deletePressed()
         msgBox.exec();
         return;
     }
-    if (unlikely(!m_documentId.isValid()))
+
+    if (unlikely(!m_documentId.isValid())) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText(tr("No document deleted"));
+        msgBox.setInformativeText(tr(
+                "What document ?!?"));
+        msgBox.setStandardButtons(QMessageBox::Ok);
+
+        msgBox.exec();
         return;
+    }
 
     paramList param;
     param.append(m_documentId);
@@ -285,7 +297,8 @@ void managementCost::deletePressed()
                                               "delete_document_purchasing"};
     query.setFunctionName(funcName[ui.radioPurchasing->isChecked()]);
     query.setParameters(param);
-    query.execute();
+    bool ok = query.execute();
+    Q_ASSERT(ok == true);
 
     undoPressed();
 }
@@ -310,6 +323,7 @@ void managementCost::listPressed()
     QDialog dialogBox;
     QGridLayout dialogLayout;
     simpleTable table(this);
+
     static char const * const tableName[2] = {"document_goods_cost",
                                               "document_purchasing_cost" };
 
@@ -320,6 +334,7 @@ void managementCost::listPressed()
     table.setEditTriggers(QAbstractItemView::NoEditTriggers);
     table.setSelectionBehavior(QAbstractItemView::SelectRows);
     table.setSelectionMode(QAbstractItemView::SingleSelection);
+    table.resizeColumnsToContents();
 
     dialogLayout.addWidget(&table);
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok
@@ -354,6 +369,9 @@ void managementCost::listPressed()
 
         goPressed();
     }
+
+    for (int i=0;i<ui.tableView->model()->columnCount();i++)
+        ui.tableView->setColumnWidth(i,100);
 }
 
 void managementCost::updateAmount()

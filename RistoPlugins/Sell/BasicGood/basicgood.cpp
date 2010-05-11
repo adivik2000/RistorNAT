@@ -6,6 +6,7 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 {
     simpleTable *table = new simpleTable(parent);
     table->setTableName("basic_good");
+    table->setColumnWidth(0,300);
 
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(table);

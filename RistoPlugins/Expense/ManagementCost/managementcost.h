@@ -22,6 +22,7 @@
 #include <QList>
 #include <QAction>
 #include <workdelegate.h>
+#include "updateamountdelegate.h"
 #include "ui_managementcost.h"
 #include "plugininterface.h"
 
@@ -85,6 +86,8 @@ private:
     comboBoxDelegate *m_comboCategory;
     comboBoxDelegate *m_comboUM;
     comboBoxDelegate *m_comboGood;
+    updateAmountPurchDelegate *m_purchDel;
+    updateAmountGoodsDelegate *m_goodsDel;
 };
 
 #endif // COSTUI_H
