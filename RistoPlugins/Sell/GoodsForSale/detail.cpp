@@ -64,16 +64,10 @@ void goodsDetail::updateInfo(QModelIndex index)
     QVariant res;
     Q_ASSERT(article.isValid());
     paramList param;
-    param.append(QVariant());
-    param.append(QVariant());
     param.append(article);
 
-    simpleQuery query("cost",param);
+    simpleQuery query("average_cost",param);
 
     query.execute(res);
-    ui->lineLast->setText(res.toString());
-
-    /*query.setFunctionName("average_cost");
-    query.execute(res);
-    ui->lineAvg->setText(res.toString());*/
+    ui->lineAvg->setText(res.toString());
 }

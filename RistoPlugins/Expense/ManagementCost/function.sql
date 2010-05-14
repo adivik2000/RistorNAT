@@ -94,23 +94,47 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_document_goods_stocks()
+CREATE OR REPLACE FUNCTION update_cost(p_article VARCHAR, p_single_price NUMERIC,
+                                       p_insert BOOLEAN)
+    RETURNS VOID AS $$
+    DECLARE
+        old_price NUMERIC;
+        new_price NUMERIC;
+    BEGIN
+        SELECT average_cost INTO old_price FROM basic_good
+            WHERE name=p_article;
+        IF old_price IS NULL THEN
+            old_price := 0;
+        END IF;
+        IF p_insert THEN
+            new_price := (old_price + p_single_price)/2;
+        ELSE
+            new_price := ((old_price*2)-p_single_price)/2;
+        END IF;
+        UPDATE basic_good SET average_cost=new_price WHERE name=p_article;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION update_goods_stocks_and_cost()
     RETURNS TRIGGER AS $$
     DECLARE
         tot_amount NUMERIC;
     BEGIN
         IF TG_OP = 'INSERT' THEN
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
+            PERFORM * FROM update_cost(NEW.good,NEW.single_price,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
+            PERFORM * FROM update_cost(OLD.good,OLD.single_price,FALSE);
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
+            PERFORM * FROM update_cost(NEW.good,NEW.single_price,TRUE);
         ELSE
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
+            PERFORM * FROM update_cost(OLD.good,OLD.single_price,FALSE);
         END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER update_amount_document_goods AFTER INSERT OR UPDATE OR
-    DELETE ON row_goods_cost
-    FOR EACH ROW EXECUTE PROCEDURE update_document_goods_stocks();
+CREATE TRIGGER trigger_row_goods AFTER INSERT OR UPDATE OR DELETE ON row_goods_cost
+    FOR EACH ROW EXECUTE PROCEDURE update_goods_stocks_and_cost();

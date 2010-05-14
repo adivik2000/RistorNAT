@@ -7,6 +7,11 @@ PREFIX=RistoPlugins
 
 # Worker. DO NOT MODIFY UNLESS YOU KNOW WHAT YOU'RE DOING.
 
+if [[ $1 -eq "-h" ]]; then
+	echo "Usage: gendbscript.sh"
+	exit 1
+fi
+
 if [[ -f $SCHEMA ]]; then
 	rm $SCHEMA
 fi
