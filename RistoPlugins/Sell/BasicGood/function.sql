@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION article_to_stock()
     DECLARE
     BEGIN
         IF TG_OP = 'INSERT' THEN
-            INSERT INTO stock(article,quantity) VALUES (NEW.name,0);
+            INSERT INTO stock(article,quantity,um) VALUES (NEW.name,0,NEW.um);
         ELSE
             DELETE FROM stock WHERE article = OLD.name;
         END IF;
