@@ -7,7 +7,7 @@ PREFIX=RistoPlugins
 
 # Worker. DO NOT MODIFY UNLESS YOU KNOW WHAT YOU'RE DOING.
 
-if [[ $1 -eq "-h" ]]; then
+if [[ $1 == "-h" ]]; then
 	echo "Usage: gendbscript.sh"
 	exit 1
 fi
