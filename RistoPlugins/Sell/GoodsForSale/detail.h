@@ -54,8 +54,6 @@ private:
 inline void goodsDetail::checkEnable(int status)
 {
     ui->lineAvg->setEnabled(status);
-    ui->lineLast->setEnabled(status);
     ui->labelAvg->setEnabled(status);
-    ui->labelLast->setEnabled(status);
 }
 #endif // GOODSDETAIL_H

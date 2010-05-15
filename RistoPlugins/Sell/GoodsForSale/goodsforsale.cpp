@@ -42,7 +42,7 @@ goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
     table->setDefaultValue(0,QVariant(),true);
     table->addRelation(1,"goods_category","code","code");
     table->addRelation(2,"sell_category","code","code");
-    table->addRelation(5,"unit_of_measurement","short_name","short_name");
+    table->addRelation(5,"unit_of_measurement","name","name");
 
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
