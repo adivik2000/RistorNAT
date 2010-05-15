@@ -18,6 +18,7 @@
  */
 #include "um.h"
 #include <advancedtable.h>
+#include <workdelegate.h>
 
 #include <QLabel>
 #include <QtPlugin>
@@ -26,19 +27,15 @@
 /** @brief Constructor
   *
   */
-um::um(QWidget *parent):
-        pluginInterface(parent)
+um::um(QWidget *parent):pluginInterface(parent)
 {
-    advancedTable *tableComp = new advancedTable(parent);
-    simpleTable *tableBasic = new simpleTable(parent);
+    simpleTable *tableComp = new simpleTable(this);
+    comboBoxDelegate *comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
 
-    tableBasic->setTableName("basic_unit");
     tableComp->setTableName("unit_of_measurement");
-    tableComp->addRelation(3,"basic_unit","short_name","short_name");
+    tableComp->addRelation(2,"unit_of_measurement","base","name");
+    tableComp->setItemDelegateForColumn(1,comboUM);
 
-    QLabel *desc_tableBasic = new QLabel(this);
-    desc_tableBasic->setText(tr("Insert the basic unit of measurement, like"
-                                " gr or lt."));
     QLabel *desc_adv = new QLabel(this);
     desc_adv->setText(tr("Insert the unit of measurement which will be used"
                          " by other plugins, like Kg, g, lt, cl.. and don't"
@@ -46,10 +43,8 @@ um::um(QWidget *parent):
 
     QGridLayout *layout = new QGridLayout(this);
 
-    layout->addWidget(desc_tableBasic,0,0);
-    layout->addWidget(tableBasic,1,0);
-    layout->addWidget(desc_adv,2,0);
-    layout->addWidget(tableComp,3,0);
+    layout->addWidget(desc_adv,0,0);
+    layout->addWidget(tableComp,1,0);
 }
 
 /** @brief Deconstructor
