@@ -10,7 +10,7 @@ CREATE TABLE "article_component"
   selling_component INTEGER REFERENCES good_for_sale(id)
     MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
   quantity NUMERIC NOT NULL,
-  um CHARACTER VARYING(5) REFERENCES unit_of_measurement(short_name) MATCH SIMPLE
+  um CHARACTER VARYING(5) REFERENCES unit_of_measurement(name) MATCH SIMPLE
     ON UPDATE CASCADE ON DELETE RESTRICT,
   PRIMARY KEY(basic_component,selling_component)
 ) WITH (OIDS=TRUE);
