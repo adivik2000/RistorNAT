@@ -74,44 +74,52 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
                                         p_um VARCHAR, p_insert BOOLEAN)
     RETURNS VOID AS $$
     DECLARE
-        tot_qty NUMERIC;
-        multiplicator NUMERIC;
-        basic VARCHAR;
+        old_stock RECORD;
+        div NUMERIC;
+        new_qty NUMERIC;
     BEGIN
-        SELECT multi INTO multiplicator FROM unit_of_measurement
-            WHERE short_name=p_um;
-        SELECT base INTO basic FROM unit_of_measurement
-            WHERE short_name=p_um;
-        SELECT quantity INTO tot_qty FROM stock WHERE article=p_article;
-
+        SELECT * INTO old_stock FROM stock WHERE article=p_article;
+        div := get_div_for_um(old_stock.um,p_um);
+        new_qty := p_quantity * div;
         IF p_insert THEN
-            UPDATE stock SET quantity=tot_qty+(p_quantity*multiplicator), um=basic
+            UPDATE stock SET quantity=old_stock.quantity+new_qty
                 WHERE article=p_article;
         ELSE
-            UPDATE stock SET quantity=tot_qty-(p_quantity*multiplicator)
+            UPDATE stock SET quantity=old_stock.quantity-new_qty
                 WHERE article=p_article;
         END IF;
+
+        UPDATE stock SET um=p_um WHERE article=p_article;
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_cost(p_article VARCHAR, p_single_price NUMERIC,
-                                       p_insert BOOLEAN)
+CREATE OR REPLACE FUNCTION update_cost(p_article VARCHAR, p_um VARCHAR,
+                                       p_single_price NUMERIC, p_insert BOOLEAN)
     RETURNS VOID AS $$
     DECLARE
-        old_price NUMERIC;
+        old_um VARCHAR;
+        div NUMERIC;
         new_price NUMERIC;
+        price NUMERIC;
+        old_price NUMERIC;
     BEGIN
-        SELECT average_cost INTO old_price FROM basic_good
-            WHERE name=p_article;
-        IF old_price IS NULL THEN
-            old_price := 0;
+        SELECT average_cost INTO old_price FROM basic_good WHERE name=p_article;
+        SELECT um INTO old_um FROM basic_good WHERE name=p_article;
+        IF p_insert AND (old_um IS NULL OR old_price <= CAST(0 AS NUMERIC)) THEN
+            UPDATE basic_good SET um=p_um, average_cost=p_single_price
+                WHERE name=p_article;
+            RETURN;
         END IF;
+        div := get_div_for_um(old_um,p_um);
+        price := p_single_price * div;
         IF p_insert THEN
-            new_price := (old_price + p_single_price)/2;
+            new_price := round((old_price + price)/2,2);
         ELSE
-            new_price := ((old_price*2)-p_single_price)/2;
+            new_price := round(((old_price*2)-price)/2,2);
         END IF;
+
         UPDATE basic_good SET average_cost=new_price WHERE name=p_article;
+        RETURN;
     END;
 $$ LANGUAGE 'plpgsql';
 
@@ -122,15 +130,15 @@ CREATE OR REPLACE FUNCTION update_goods_stocks_and_cost()
     BEGIN
         IF TG_OP = 'INSERT' THEN
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
-            PERFORM * FROM update_cost(NEW.good,NEW.single_price,TRUE);
+            PERFORM * FROM update_cost(NEW.good,NEW.um,NEW.single_price,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
-            PERFORM * FROM update_cost(OLD.good,OLD.single_price,FALSE);
+            PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
             PERFORM * FROM update_cost(NEW.good,NEW.single_price,TRUE);
         ELSE
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
-            PERFORM * FROM update_cost(OLD.good,OLD.single_price,FALSE);
+            PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
         END IF;
         RETURN NULL;
     END;
