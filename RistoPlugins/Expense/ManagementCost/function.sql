@@ -80,7 +80,7 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
     BEGIN
         SELECT * INTO old_stock FROM stock WHERE article=p_article;
         div := get_div_for_um(old_stock.um,p_um);
-        new_qty := p_quantity * div;
+        new_qty := p_quantity / div;
         IF p_insert THEN
             UPDATE stock SET quantity=old_stock.quantity+new_qty
                 WHERE article=p_article;
@@ -88,8 +88,6 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
             UPDATE stock SET quantity=old_stock.quantity-new_qty
                 WHERE article=p_article;
         END IF;
-
-        UPDATE stock SET um=p_um WHERE article=p_article;
     END;
 $$ LANGUAGE 'plpgsql';
 
@@ -126,7 +124,6 @@ $$ LANGUAGE 'plpgsql';
 CREATE OR REPLACE FUNCTION update_goods_stocks_and_cost()
     RETURNS TRIGGER AS $$
     DECLARE
-        tot_amount NUMERIC;
     BEGIN
         IF TG_OP = 'INSERT' THEN
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
@@ -135,7 +132,7 @@ CREATE OR REPLACE FUNCTION update_goods_stocks_and_cost()
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
             PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
-            PERFORM * FROM update_cost(NEW.good,NEW.single_price,TRUE);
+            PERFORM * FROM update_cost(NEW.good,NEW.um,NEW.single_price,TRUE);
         ELSE
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
             PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
