@@ -40,13 +40,31 @@ do
 	cat $i/function.sql >> $FN
 done
 
-echo -en "CREATE TABLE "db_version"
+echo -en "\nCREATE TABLE "db_version"
 (
   major_version INTEGER,
   minor_version INTEGER,
   patch_version INTEGER,
   PRIMARY KEY(major_version, minor_version, patch_version)
-) WITH (OIDS=FALSE);" >> $SCHEMA
+) WITH (OIDS=FALSE);\n" >> $SCHEMA
 
 echo -en "CREATE OR REPLACE FUNCTION ristornat_db_version()
-  RETURNS SETOF db_version AS \$\$ SELECT * FROM db_version; \$\$ LANGUAGE SQL;" >> $FN
+  RETURNS SETOF db_version AS \$\$ SELECT * FROM db_version;\n\$\$ LANGUAGE SQL;\n" >> $FN
+
+echo -en "\nCREATE SEQUENCE "db_log_id_seq";\n" >> $SCHEMA
+
+echo -en "\nCREATE TABLE "db_log"
+(
+  id bigint DEFAULT NEXTVAL('db_log_id_seq') NOT NULL,
+  level character(1) NOT NULL,
+  object character varying(100) NOT NULL,
+  message character varying(1000) NOT NULL,
+  eventdate timestamp without time zone DEFAULT now() NOT NULL,
+  CONSTRAINT level_allowed_values CHECK (((("level" = 'I'::bpchar) OR ("level" =
+  'W'::bpchar)) OR ("level" = 'E'::bpchar)))
+);\n" >> $SCHEMA
+
+echo -en "\nCREATE OR REPLACE FUNCTION ristornat_log(p_lvl CHARACTER, p_obj VARCHAR, p_msg VARCHAR) RETURNS VOID AS \$\$
+  INSERT INTO db_log(level,object,message) VALUES (\$1,\$2,\$3);
+\$\$ LANGUAGE SQL;\n" >> $FN
+
