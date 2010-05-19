@@ -58,12 +58,12 @@ managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
     connect(actList,SIGNAL(triggered()),this,SLOT(listPressed()));
     connect(ui.tableView,SIGNAL(afterSave()),this,SLOT(updateAmount()));
 
-    ui.tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui.tableView->setSelectionMode(QAbstractItemView::ContiguousSelection);
 
     m_comboCategory = new comboBoxDelegate("cost_category",0,0,this);
     m_comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
     m_comboGood = new comboBoxDelegate("basic_good",0,0,this);
-    m_purchDel = new updateAmountPurchDelegate(ui.lcdNumber,this);
+    m_purchPriceDel = new updateAmountPurchDelegate(ui.lcdNumber,this);
     m_goodsDel = new updateAmountGoodsDelegate(ui.lcdNumber,this);
 }
 
@@ -125,12 +125,12 @@ void managementCost::goPressed()
                                  amountName[radioPurch]);
 
     if (radioPurch) {
-        ui.tableView->setItemDelegateForColumn(3,m_purchDel);
+        ui.tableView->setItemDelegateForColumn(3,m_purchPriceDel);
         ui.tableView->setItemDelegateForColumn(2,m_comboCategory);
-
     } else {
         ui.tableView->setItemDelegateForColumn(2,m_comboGood);
         ui.tableView->setItemDelegateForColumn(4,m_comboUM);
+        ui.tableView->setItemDelegateForColumn(3,m_goodsDel);
         ui.tableView->setItemDelegateForColumn(5,m_goodsDel);
         for (int i=0;i<ui.tableView->model()->columnCount();i++)
             ui.tableView->setColumnWidth(i,100);

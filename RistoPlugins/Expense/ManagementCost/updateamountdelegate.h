@@ -40,13 +40,17 @@ class updateAmountGoodsDelegate : public doubleSpinBoxDelegate
 {
 public:
     updateAmountGoodsDelegate(QLCDNumber *lcd,QObject *parent = 0):
-            doubleSpinBoxDelegate(parent) { m_lcd = lcd; }
+            doubleSpinBoxDelegate(parent) {
+        m_lcd = lcd;
+        m_startQty = m_startPrice = 0.0;
+    }
     void setModelData(QWidget *editor, QAbstractItemModel *model,
                       const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
 
 private:
-    double m_start;
+    double m_startPrice;
+    double m_startQty;
     QLCDNumber *m_lcd;
 };
 

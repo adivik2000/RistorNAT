@@ -86,7 +86,7 @@ private:
     comboBoxDelegate *m_comboCategory;
     comboBoxDelegate *m_comboUM;
     comboBoxDelegate *m_comboGood;
-    updateAmountPurchDelegate *m_purchDel;
+    updateAmountPurchDelegate *m_purchPriceDel;
     updateAmountGoodsDelegate *m_goodsDel;
 };
 
