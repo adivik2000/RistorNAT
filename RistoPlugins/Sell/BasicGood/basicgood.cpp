@@ -22,18 +22,54 @@
 
 #include <simplequery.h>
 #include <QMessageBox>
+#include <QToolBar>
+#include <QAction>
 
 basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 {
-    QGridLayout *layout = new QGridLayout(this);
+    QToolBar *toolBar = new QToolBar(this);
+    QAction *m_refresh = new QAction(QIcon(":/refresh.svg"),
+                                     tr("Refresh"),toolBar);
+    toolBar->addAction(m_refresh);
+
     m_table = new simpleTable(this);
     m_table->setTableName("basic_good");
     m_table->setColumnWidth(0,300);
 
+    QGridLayout *layout = new QGridLayout(this);
+    layout->addWidget(toolBar);
     layout->addWidget(m_table);
     setLayout(layout);
 
     connect(m_table,SIGNAL(beforeDelete()),this,SLOT(deleteFromStock()));
+    connect(m_refresh,SIGNAL(triggered()),this,SLOT(refreshAvgCost()));
+}
+
+void basicGood::refreshAvgCost()
+{
+    simpleQuery query("good_average_cost");
+    paramList param;
+
+    QItemSelectionModel *_selectionModel = m_table->selectionModel();
+    QModelIndexList indexes = _selectionModel->selectedRows();
+
+    foreach(QModelIndex index, indexes) {
+        QModelIndex idx = index.sibling(index.row(),0);
+        param.append(idx.data());
+        query.setParameters(param);
+
+        if (! query.execute()) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("Error executing a query"));
+            msgBox.setInformativeText(tr("Query for average cost of " +
+                                         index.data().toString() +
+                                         tr(" failed.")));
+            msgBox.setStandardButtons(QMessageBox::Ok);
+
+            msgBox.exec();
+        }
+    }
 }
 
 void basicGood::deleteFromStock()

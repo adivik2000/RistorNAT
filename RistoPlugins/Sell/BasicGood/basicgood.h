@@ -52,8 +52,9 @@ public:
 
     QString family() { return "Sell"; }
 
-public slots:
+private slots:
     void deleteFromStock();
+    void refreshAvgCost();
 
 private:
     simpleTable *m_table;

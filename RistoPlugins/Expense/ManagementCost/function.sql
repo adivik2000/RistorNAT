@@ -91,55 +91,21 @@ CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
     END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_cost(p_article VARCHAR, p_um VARCHAR,
-                                       p_single_price NUMERIC, p_insert BOOLEAN)
-    RETURNS VOID AS $$
-    DECLARE
-        old_um VARCHAR;
-        div NUMERIC;
-        new_price NUMERIC;
-        price NUMERIC;
-        old_price NUMERIC;
-    BEGIN
-        SELECT average_cost INTO old_price FROM basic_good WHERE name=p_article;
-        SELECT um INTO old_um FROM basic_good WHERE name=p_article;
-        IF p_insert AND (old_um IS NULL OR old_price <= CAST(0 AS NUMERIC)) THEN
-            UPDATE basic_good SET um=p_um, average_cost=p_single_price
-                WHERE name=p_article;
-            RETURN;
-        END IF;
-        div := get_div_for_um(old_um,p_um);
-        price := p_single_price * div;
-        IF p_insert THEN
-            new_price := round((old_price + price)/2,2);
-        ELSE
-            new_price := round(((old_price*2)-price)/2,2);
-        END IF;
-
-        UPDATE basic_good SET average_cost=new_price WHERE name=p_article;
-        RETURN;
-    END;
-$$ LANGUAGE 'plpgsql';
-
-CREATE OR REPLACE FUNCTION update_goods_stocks_and_cost()
+CREATE OR REPLACE FUNCTION update_stocks()
     RETURNS TRIGGER AS $$
     DECLARE
     BEGIN
         IF TG_OP = 'INSERT' THEN
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
-            PERFORM * FROM update_cost(NEW.good,NEW.um,NEW.single_price,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
-            PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
             PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
-            PERFORM * FROM update_cost(NEW.good,NEW.um,NEW.single_price,TRUE);
         ELSE
             PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
-            PERFORM * FROM update_cost(OLD.good,OLD.um,OLD.single_price,FALSE);
         END IF;
         RETURN NULL;
     END;
 $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER trigger_row_goods AFTER INSERT OR UPDATE OR DELETE ON row_goods_cost
-    FOR EACH ROW EXECUTE PROCEDURE update_goods_stocks_and_cost();
+    FOR EACH ROW EXECUTE PROCEDURE update_stocks();

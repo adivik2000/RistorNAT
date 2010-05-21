@@ -30,5 +30,6 @@
         <file>vendita48x48.png</file>
         <file>left_arrow-32.png</file>
         <file>rigth_arrow-32.png</file>
+        <file>refresh.svg</file>
     </qresource>
 </RCC>

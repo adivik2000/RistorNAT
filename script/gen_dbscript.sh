@@ -64,7 +64,10 @@ echo -en "\nCREATE TABLE "db_log"
   'W'::bpchar)) OR ("level" = 'E'::bpchar)))
 );\n" >> $SCHEMA
 
-echo -en "\nCREATE OR REPLACE FUNCTION ristornat_log(p_lvl CHARACTER, p_obj VARCHAR, p_msg VARCHAR) RETURNS VOID AS \$\$
-  INSERT INTO db_log(level,object,message) VALUES (\$1,\$2,\$3);
+echo -en "\nCREATE OR REPLACE FUNCTION ristornat_log(p_lvl CHARACTER,
+                                                     p_obj VARCHAR,
+                                                     p_msg VARCHAR)
+  RETURNS VOID AS \$\$
+     INSERT INTO db_log(level,object,message) VALUES (\$1,\$2,\$3);
 \$\$ LANGUAGE SQL;\n" >> $FN
 
