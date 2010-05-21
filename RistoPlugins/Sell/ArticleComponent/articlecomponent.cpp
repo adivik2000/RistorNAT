@@ -30,7 +30,7 @@ articleComponent::articleComponent(QWidget *parent) :
     ui->comboSelling->initialize("good_for_sale",0,3);
 
     ui->tableView->setTableName("article_component");
-    ui->tableView->addRelation(0,"basic_good","code","code");
+    ui->tableView->addRelation(0,"basic_good","name","name");
     ui->tableView->addRelation(1,"good_for_sale","id","description");
     ui->tableView->addRelation(3,"unit_of_measurement","name","name");
 }
