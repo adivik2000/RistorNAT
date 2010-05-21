@@ -62,14 +62,15 @@ void basicGood::refreshAvgCost()
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Warning);
             msgBox.setText(tr("Error executing a query"));
-            msgBox.setInformativeText(tr("Query for average cost of " +
+            msgBox.setInformativeText(tr("Query for average cost of ") +
                                          index.data().toString() +
-                                         tr(" failed.")));
+                                         tr(" failed."));
             msgBox.setStandardButtons(QMessageBox::Ok);
 
             msgBox.exec();
         }
     }
+    m_table->setTableName("basic_good");
 }
 
 void basicGood::deleteFromStock()
