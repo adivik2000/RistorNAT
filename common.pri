@@ -29,4 +29,4 @@ RCC_DIR = "$$ROOT"/.build/
 INCLUDEPATH += "$$ROOT"/../qManagementSoftware/src
 INCLUDEPATH += "$$ROOT"/core
 
-LIBS += -L"$$ROOT"/../qManagementSoftware/Library -lDatabase
+LIBS += -L"$$ROOT"/../qManagementSoftware/src -lDatabase
