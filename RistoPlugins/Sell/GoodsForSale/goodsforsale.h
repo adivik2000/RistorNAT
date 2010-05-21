@@ -20,7 +20,8 @@
 #define GOODSFORSALE_H
 
 #include "plugininterface.h"
-#include "detail.h"
+
+class advancedTable;
 
 /** @brief Store and retrieve your selling articles [Sell set]
   *
@@ -59,6 +60,12 @@ public:
 
     QIcon icon() { return QIcon(":/vendita48x48.png"); }
     QString family() { return "Sell"; }
+
+private slots:
+    void updateCost();
+
+private:
+    advancedTable *m_table;
 };
 
 #endif // GOODSFORSALE_H

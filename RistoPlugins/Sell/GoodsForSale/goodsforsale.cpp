@@ -19,7 +19,9 @@
 #include "goodsforsale.h"
 #include <QtPlugin>
 #include <QVBoxLayout>
+#include <QMessageBox>
 #include <advancedtable.h>
+#include <simplequery.h>
 
 /** @brief Constructor
   *
@@ -28,31 +30,54 @@
   */
 goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
 {
-    advancedTable *table = new advancedTable(this);
-    table->setTableName("good_for_sale");
+    QToolBar *toolBar = new QToolBar(this);
+    QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh"),toolBar);
+    connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
+    toolBar->addAction(refresh);
+
+    m_table = new advancedTable(this);
+    m_table->setTableName("good_for_sale");
+    m_table->setDefaultValue(0,QVariant(),true);
+    m_table->addRelation(2,"goods_category","description","description");
+    m_table->addRelation(3,"sell_category","description","description");
+    m_table->addRelation(5,"unit_of_measurement","name","name");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    goodsDetail *det = new goodsDetail(this);
-
-    layout->addWidget(table);
-    layout->addWidget(det);
-
+    layout->addWidget(toolBar);
+    layout->addWidget(m_table);
     setLayout(layout);
-
-    table->setDefaultValue(0,QVariant(),true);
-    table->addRelation(1,"goods_category","code","code");
-    table->addRelation(2,"sell_category","code","code");
-    table->addRelation(5,"unit_of_measurement","name","name");
-
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    table->setSelectionMode(QAbstractItemView::SingleSelection);
-
-    connect(table,SIGNAL(pressed(QModelIndex)),det,SLOT(updateInfo(QModelIndex)));
 }
 
 goodsForSale::~goodsForSale()
 {
+}
+
+void goodsForSale::updateCost()
+{
+    simpleQuery query("set_article_average_cost");
+    paramList param;
+
+    QItemSelectionModel *_selectionModel = m_table->selectionModel();
+    QModelIndexList indexes = _selectionModel->selectedRows();
+
+    foreach(QModelIndex index, indexes) {
+        QModelIndex idx = index.sibling(index.row(),0);
+        param.append(idx.data());
+        query.setParameters(param);
+
+        if (! query.execute()) {
+            QMessageBox msgBox;
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("Error executing a query"));
+            msgBox.setInformativeText(tr("Query for cost of ") +
+                                         index.data().toString() +
+                                         tr(" failed."));
+            msgBox.setStandardButtons(QMessageBox::Ok);
+
+            msgBox.exec();
+        }
+    }
+    m_table->setTableName("good_for_sale");
 }
 
 Q_EXPORT_PLUGIN2(goodsforsale, goodsForSale);

@@ -19,5 +19,6 @@ CREATE TABLE "good_for_sale"
   um CHARACTER VARYING(5) REFERENCES unit_of_measurement(name) MATCH SIMPLE
     ON UPDATE CASCADE ON DELETE RESTRICT,
   last_cost NUMERIC,
+  average_cost NUMERIC,
   PRIMARY KEY(id)
 ) WITH (OIDS=TRUE);
