@@ -35,6 +35,7 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
     m_table = new simpleTable(this);
     m_table->setTableName("basic_good");
     m_table->setColumnWidth(0,300);
+    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(toolBar);
@@ -47,7 +48,8 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 
 void basicGood::refreshAvgCost()
 {
-    simpleQuery query("good_average_cost");
+    /** @todo date are always null */
+    simpleQuery query("set_good_average_cost");
     paramList param;
 
     QItemSelectionModel *_selectionModel = m_table->selectionModel();
@@ -61,10 +63,8 @@ void basicGood::refreshAvgCost()
         if (! query.execute()) {
             QMessageBox msgBox;
             msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("Error executing a query"));
-            msgBox.setInformativeText(tr("Query for average cost of ") +
-                                         index.data().toString() +
-                                         tr(" failed."));
+            msgBox.setText(tr("Error executing a query for ") + idx.data().toString());
+            msgBox.setInformativeText(query.getErrorMessage());
             msgBox.setStandardButtons(QMessageBox::Ok);
 
             msgBox.exec();
