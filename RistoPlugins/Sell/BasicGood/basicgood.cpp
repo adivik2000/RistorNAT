@@ -28,6 +28,7 @@
 basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 {
     QToolBar *toolBar = new QToolBar(this);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     QAction *m_refresh = new QAction(QIcon(":/refresh.svg"),
                                      tr("Refresh"),toolBar);
     toolBar->addAction(m_refresh);

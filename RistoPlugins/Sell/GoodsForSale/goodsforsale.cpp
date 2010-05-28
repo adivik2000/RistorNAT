@@ -31,6 +31,7 @@
 goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
 {
     QToolBar *toolBar = new QToolBar(this);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh"),toolBar);
     connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
     toolBar->addAction(refresh);
