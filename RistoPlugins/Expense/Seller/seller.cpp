@@ -68,22 +68,24 @@ void seller::okPressed()
         QVariant seller = index.data();
 
         paramList param;
+        param.append(seller);
         param.append(QVariant(ui.dateFrom->date()));
         param.append(QVariant(ui.dateTo->date()));
-        param.append(seller);
 
         simpleQuery query("report_seller_amount",param);
 
         QAbstractItemModel *model = query.getResult();
+        QVariant amount;
 
         if (likely (model != 0 && model->rowCount() == 1)) {
-            QVariant amount = model->data(model->index(0,1));
+            amount = model->data(model->index(0,0));
+
             if (unlikely(amount.toString().isEmpty())) {
                 QMessageBox msgBox;
                 msgBox.setIcon(QMessageBox::Warning);
                 msgBox.setText(tr("No information for supplier"));
                 msgBox.setInformativeText(tr("Supplier ") + seller.toString() +
-                                          " has no financial information.");
+                                          tr(" has no financial information."));
                 msgBox.setStandardButtons(QMessageBox::Ok);
 
                 msgBox.exec();
@@ -91,8 +93,7 @@ void seller::okPressed()
             }
 
             QStandardItem *item = new QStandardItem(seller.toString());
-            QStandardItem *item2 = new QStandardItem(model->data(
-                    model->index(0,1)).toString());
+            QStandardItem *item2 = new QStandardItem(amount.toString()+" $");
 
             modelView->setItem(rowDone,0,item);
             modelView->setItem(rowDone,1,item2);
