@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2009 Natale Patriciello <kronat@tiscali.it>
+ *  Copyright (c) 2010 Natale Patriciello <kronat@tiscali.it>
  *
  *  This file is part of RistorNAT.
  *
@@ -21,6 +21,9 @@
 
 #include <plugininterface.h>
 #include <QtPlugin>
+
+#include "ui_goodscategorydetail.h"
+class simpleTable;
 
 /** @brief Manage the good's categories [Sell set]
   *
@@ -49,6 +52,12 @@ public:
     QIcon icon() { return QIcon(":/categoria_articolo48x48.png"); }
 
     QString family() { return tr("Sell"); }
+public slots:
+    void updateReport();
+
+private:
+    Ui::goodsCategoryDetail *m_detail;
+    simpleTable *m_table;
 };
 
 #endif // GOODSCATEGORY_H

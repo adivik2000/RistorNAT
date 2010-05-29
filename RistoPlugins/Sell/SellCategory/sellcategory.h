@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2009 Natale Patriciello <kronat@tiscali.it>
+ *  Copyright (c) 2010 Natale Patriciello <kronat@tiscali.it>
  *
  *  This file is part of RistorNAT.
  *
@@ -20,6 +20,8 @@
 #define SELLCATEGORY_H
 
 #include <plugininterface.h>
+#include "ui_sellcategorydetail.h"
+class simpleTable;
 
 /** @brief Manage selling category [Sell set]
   *
@@ -46,6 +48,13 @@ public:
     QIcon icon() { return QIcon(":/categoria_cliente48x48.png"); }
 
     QString family() { return "Sell"; };
+
+public slots:
+    void updateReport();
+
+private:
+    simpleTable *m_table;
+    Ui::sellCategoryDetail *m_detail;
 };
 
 #endif // SELLCATEGORY_H
