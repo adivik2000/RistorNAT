@@ -18,8 +18,9 @@ CREATE OR REPLACE FUNCTION article_average_cost(p_article VARCHAR,
             SELECT * INTO good_avg
                 FROM good_average_cost(component.basic_component,
                                        p_date_from,p_date_to);
-            price := component.quantity * (good_avg / div);
+            price := component.quantity * (good_avg * div);
             cost := cost + price;
+            PERFORM * FROM ristornat_log('I','avg_cost', 'div=' || div || 'good_avg=' || good_avg);
         END LOOP;
 
         RETURN cost;

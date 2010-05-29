@@ -30,7 +30,7 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
     QToolBar *toolBar = new QToolBar(this);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     QAction *m_refresh = new QAction(QIcon(":/refresh.svg"),
-                                     tr("Refresh"),toolBar);
+                                     tr("Refresh Costs"),toolBar);
     toolBar->addAction(m_refresh);
 
     m_table = new simpleTable(this);
@@ -51,13 +51,13 @@ void basicGood::refreshAvgCost()
 {
     /** @todo date are always null */
     simpleQuery query("set_good_average_cost");
-    paramList param;
 
     QItemSelectionModel *_selectionModel = m_table->selectionModel();
     QModelIndexList indexes = _selectionModel->selectedRows();
 
     foreach(QModelIndex index, indexes) {
         QModelIndex idx = index.sibling(index.row(),0);
+        paramList param;
         param.append(idx.data());
         query.setParameters(param);
 
@@ -72,6 +72,16 @@ void basicGood::refreshAvgCost()
         }
     }
     m_table->setTableName("basic_good");
+
+    if (indexes.isEmpty()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("No goods selected! "));
+        msgBox.setInformativeText("Select one or more goods from list below.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+
+        msgBox.exec();
+    }
 }
 
 void basicGood::deleteFromStock()

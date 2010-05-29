@@ -32,7 +32,7 @@ goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
 {
     QToolBar *toolBar = new QToolBar(this);
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh"),toolBar);
+    QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh Costs"),toolBar);
     connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
     toolBar->addAction(refresh);
 
@@ -56,13 +56,18 @@ goodsForSale::~goodsForSale()
 void goodsForSale::updateCost()
 {
     simpleQuery query("set_article_average_cost");
-    paramList param;
 
     QItemSelectionModel *_selectionModel = m_table->selectionModel();
-    QModelIndexList indexes = _selectionModel->selectedRows();
+    QModelIndexList indexes = _selectionModel->selectedIndexes();
+    QVector<int> map;
 
     foreach(QModelIndex index, indexes) {
-        QModelIndex idx = index.sibling(index.row(),0);
+        if (map.contains(index.row()))
+            continue;
+
+        map.append(index.row());
+        QModelIndex idx = index.sibling(index.row(),1);
+        paramList param;
         param.append(idx.data());
         query.setParameters(param);
 
@@ -79,6 +84,16 @@ void goodsForSale::updateCost()
         }
     }
     m_table->setTableName("good_for_sale");
+
+    if (indexes.isEmpty()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("No article(s) selected"));
+        msgBox.setInformativeText(tr("Select one or more articles."));
+        msgBox.setStandardButtons(QMessageBox::Ok);
+
+        msgBox.exec();
+    }
 }
 
 Q_EXPORT_PLUGIN2(goodsforsale, goodsForSale);
