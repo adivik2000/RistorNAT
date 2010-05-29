@@ -71,7 +71,9 @@ public slots:
     void undoPressed();
     void listPressed();
     void goPressed();
-    void updateAmount();
+    void saveAmountDisplayed();
+    void delFromAmountDisplayed();
+    void addToAmountDisplayed();
 
 protected:
     void changeEvent(QEvent *e);
@@ -79,6 +81,7 @@ protected:
                            const QString& rowTableName,
                            const QString& amountFnName);
     void enableHeader(bool enable);
+    double getAmountForRow(QModelIndex idx);
 
 private:
     Ui::managementCostUi ui; /**< @brief UserInterface */

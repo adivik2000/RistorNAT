@@ -56,7 +56,9 @@ managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
     connect(actUndo,SIGNAL(triggered()),this,SLOT(undoPressed()));
     connect(actDelete,SIGNAL(triggered()),this,SLOT(deletePressed()));
     connect(actList,SIGNAL(triggered()),this,SLOT(listPressed()));
-    connect(ui.tableView,SIGNAL(afterSave()),this,SLOT(updateAmount()));
+    connect(ui.tableView,SIGNAL(afterSave()),this,SLOT(saveAmountDisplayed()));
+    connect(ui.tableView,SIGNAL(beforeDelete()),this,SLOT(delFromAmountDisplayed()));
+    connect(ui.tableView,SIGNAL(afterRevert()),this,SLOT(addToAmountDisplayed()));
 
     ui.tableView->setSelectionMode(QAbstractItemView::ContiguousSelection);
 
@@ -374,7 +376,7 @@ void managementCost::listPressed()
         ui.tableView->setColumnWidth(i,100);
 }
 
-void managementCost::updateAmount()
+void managementCost::saveAmountDisplayed()
 {
     Q_ASSERT(m_documentId.isValid());
     static char const * const fnName[2] = {"set_amount_document_goods",
@@ -393,6 +395,71 @@ void managementCost::updateAmount()
 
         msgBox.exec();
     }
+}
+
+double managementCost::getAmountForRow(QModelIndex idx)
+{
+    bool ok;
+    int columnPrice, columnQty;
+    double val = -1;
+    if (ui.radioGoods->isChecked()) {
+        columnPrice = 5;
+        columnQty = 3;
+        QVariant price =  idx.sibling(idx.row(),columnPrice).data();
+        QVariant qty = idx.sibling(idx.row(),columnQty).data();
+        val = price.toDouble(&ok) * qty.toDouble(&ok);
+
+        if (unlikely(!ok))
+            val = -1;
+    } else if (ui.radioPurchasing->isChecked()) {
+        columnPrice = 3;
+        QVariant price =  idx.sibling(idx.row(),columnPrice).data();
+        val = price.toDouble(&ok);
+
+        if (unlikely(!ok))
+            val = -1;
+    }
+
+    return val;
+}
+
+void managementCost::delFromAmountDisplayed()
+{
+    QItemSelectionModel *_selectionModel = ui.tableView->selectionModel();
+    QModelIndexList indexes = _selectionModel->selectedIndexes();
+    QVector<int> map;
+
+    foreach (QModelIndex idx, indexes) {
+        if (map.contains(idx.row()))
+            continue;
+        map.append(idx.row());
+
+        double val = getAmountForRow(idx);
+
+        if (val < 0)
+            continue;
+
+        ui.lcdNumber->display(ui.lcdNumber->value() - val);
+    }
+
+    saveAmountDisplayed();
+}
+
+void managementCost::addToAmountDisplayed()
+{
+    QItemSelectionModel *_selectionModel = ui.tableView->selectionModel();
+    QModelIndexList indexes = _selectionModel->selectedIndexes();
+
+    foreach (QModelIndex idx, indexes) {
+        double val = getAmountForRow(idx);
+
+        if (val < 0)
+            continue;
+
+        ui.lcdNumber->display(ui.lcdNumber->value() + val);
+    }
+
+    saveAmountDisplayed();
 }
 
 void managementCost::aboutToBeOpened()
