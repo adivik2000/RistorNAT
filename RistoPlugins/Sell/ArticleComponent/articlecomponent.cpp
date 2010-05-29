@@ -27,7 +27,7 @@ articleComponent::articleComponent(QWidget *parent) :
     pluginInterface(parent),ui(new Ui::articleComponentUi)
 {
     ui->setupUi(this);
-    ui->comboSelling->initialize("good_for_sale",0,3);
+    ui->comboSelling->initialize("good_for_sale",0,1);
 
     ui->tableView->setTableName("article_component");
     ui->tableView->addRelation(0,"basic_good","name","name");

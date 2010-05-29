@@ -59,6 +59,7 @@ void seller::okPressed()
     QModelIndex index;
     QStandardItemModel *modelView = qobject_cast<QStandardItemModel*>(
             ui.tableView->model());
+    Q_ASSERT(modelView != 0);
 
     modelView->removeRows(0,modelView->rowCount());
 
