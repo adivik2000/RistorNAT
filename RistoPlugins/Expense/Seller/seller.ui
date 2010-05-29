@@ -14,15 +14,12 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupSelect">
      <property name="title">
-      <string>Select seller:</string>
+      <string>Report</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0" colspan="4">
-       <widget class="simpleTable" name="tableSeller"/>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="labelFrom">
         <property name="text">
@@ -65,7 +62,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="1" column="4">
        <widget class="QPushButton" name="buttonOk">
         <property name="text">
          <string>Ok</string>
@@ -76,18 +73,21 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0" colspan="5">
+       <widget class="QTableView" name="tableView">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::NoSelection</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QTableView" name="tableView">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
-     </property>
-    </widget>
+   <item row="0" column="0">
+    <widget class="simpleTable" name="tableSeller"/>
    </item>
   </layout>
  </widget>

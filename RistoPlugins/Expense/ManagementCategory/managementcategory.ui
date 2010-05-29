@@ -14,51 +14,30 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0">
+    <widget class="simpleTable" name="tableCategory">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>200</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupSelect">
      <property name="title">
-      <string>Select Category:</string>
+      <string>Report</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0" rowspan="3">
-       <widget class="simpleTable" name="tableCategory">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>200</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
+      <item row="0" column="0">
        <widget class="QLabel" name="labelFrom">
         <property name="text">
          <string>From</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QDateEdit" name="dateFrom">
-        <property name="dateTime">
-         <datetime>
-          <hour>0</hour>
-          <minute>0</minute>
-          <second>0</second>
-          <year>2010</year>
-          <month>1</month>
-          <day>1</day>
-         </datetime>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="labelTo">
-        <property name="text">
-         <string>To</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
+      <item row="0" column="4" colspan="3">
        <widget class="QDateEdit" name="dateTo">
         <property name="dateTime">
          <datetime>
@@ -72,7 +51,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="0" column="7">
        <widget class="QPushButton" name="buttonOk">
         <property name="text">
          <string>Ok</string>
@@ -83,33 +62,44 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" rowspan="3">
+      <item row="1" column="0" rowspan="2" colspan="3">
        <widget class="QTableView" name="tableView"/>
       </item>
+      <item row="1" column="3" rowspan="2" colspan="5">
+       <widget class="QTreeView" name="tableViewDetailed">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::NoSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QDateEdit" name="dateFrom">
+        <property name="dateTime">
+         <datetime>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>0</second>
+          <year>2010</year>
+          <month>1</month>
+          <day>1</day>
+         </datetime>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="labelTo">
+        <property name="text">
+         <string>To</string>
+        </property>
+       </widget>
+      </item>
      </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QTableView" name="tableViewDetailed">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
-     </property>
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
-     <property name="gridStyle">
-      <enum>Qt::DashDotLine</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Detailed:</string>
-     </property>
     </widget>
    </item>
   </layout>
