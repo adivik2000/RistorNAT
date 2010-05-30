@@ -25,26 +25,28 @@ class simpleTable;
 class advancedTable;
 class QGridLayout;
 
-/** @brief Store unit of measurement [Expense set]
+/** @brief Store unit of measurement
   *
+  * Under hard work.. no time to description now.
   */
-class um : public pluginInterface {
+class UnitOfMeasurement : public pluginInterface {
     Q_OBJECT
     Q_INTERFACES(pluginInterface)
 
 public:
-    um(QWidget *parent = 0);
-
-    ~um();
+    UnitOfMeasurement(QWidget *parent = 0);
 
     /** @brief Name of the plugin
       * @return Translated plugin name
       */
-    QString name() { return tr("Units of\nmeasurement"); }
+    QString name() { return tr("Unit of\nmeasurement"); }
 
     /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/categoria_fornitore48x48.png"); }
 
+    /** @brief Plugin's family
+      * @return Expense
+      */
     QString family() { return "Expense"; }
 };
 

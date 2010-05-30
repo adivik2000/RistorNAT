@@ -23,27 +23,23 @@
 
 class advancedTable;
 
-/** @brief Store and retrieve your selling articles [Sell set]
-  *
-  * @par Dependencies
-  *
-  * This plugin needs:
-  * - goodsCategory
-  * - sellCategory
-  *
-  * @par Description
+/** @brief Store and retrieve your selling articles
   *
   * With this interface, you could easily insert and modify selling articles,
   * like "Pasta al ragu".\n
-  * You could enable Detailed section, where you can see Last Cost, and
-  * the Average Cost for the article selected. See Detail for more information.
-  * @image html goods_for_sale.tiff
-  * For the editing, you have this window, called from the right click menu:
-  * @image html goods_for_sale_editing.tiff
-  * - In the column <b>goods_category</b> insert the category for the article;
-  * - In the column <b>sell_category</b> insert the selling category for the
-  * article;
-  * - In the column <b>description</b> insert the name of the article.
+  * @image html good_for_sale.png
+  * Right-clicking the table, you could edit information about the selling
+  * article.\n
+  * You could insert the <b>Description</b>, a brief name of the article,
+  * <b>Good Category</b>, the good category of the article, <b>Sell Category</b>,
+  * the sell category of the article, <b>Quantity</b> is the standard quantity
+  * of the article you will sell (statistical purpose), <b>um</b> unit of
+  * measurement for the article, and <b>Last cost</b> and <b>Average Cost</b>
+  * which are calculated by the program. You could safely insert 0 here.
+  * @par Toolbar
+  * By pressing Refresh Costs, the program recalculate the average cost of
+  * the article selected.This operation could take much time, so be
+  * patient.
   */
 class goodsForSale : public pluginInterface
 {
@@ -51,21 +47,25 @@ class goodsForSale : public pluginInterface
     Q_INTERFACES(pluginInterface)
 public:
     goodsForSale(QWidget *parent = 0);
-    ~goodsForSale();
 
     /** @brief Plugin's name
       * @return Translated plugin's name
       */
     virtual QString name() { return tr("Goods\nfor sale"); }
 
+    /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/vendita48x48.png"); }
+
+    /** @brief Plugin's family
+      * @return Sell
+      */
     QString family() { return "Sell"; }
 
 private slots:
     void updateCost();
 
 private:
-    advancedTable *m_table;
+    advancedTable *m_table; /**< Main Table */
 };
 
 #endif // GOODSFORSALE_H

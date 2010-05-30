@@ -22,6 +22,10 @@
 #include <QMessageBox>
 #include <QtPlugin>
 
+/** @brief Constructor
+  *
+  * Create also the model for the report.
+  */
 seller::seller(QWidget *parent) : pluginInterface(parent)
 {
     ui.setupUi(this);
@@ -35,10 +39,14 @@ seller::seller(QWidget *parent) : pluginInterface(parent)
     ui.tableView->setModel(&m_viewModel);
 }
 
+/** @brief Deconstructor
+  */
 seller::~seller()
 {
 }
 
+/** @brief Retranslate UI
+  */
 void seller::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -51,6 +59,8 @@ void seller::changeEvent(QEvent *e)
     }
 }
 
+/** @brief Make the report for each sellers selected
+  */
 void seller::okPressed()
 {
     int rowDone = 0;
@@ -104,6 +114,8 @@ void seller::okPressed()
     }
 }
 
+/** @brief Ask to save information before leaving the plugin
+  */
 void seller::askToSave()
 {
     if (ui.tableSeller->isDirty()) {

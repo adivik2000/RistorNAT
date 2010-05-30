@@ -23,6 +23,10 @@
 #include <simplequery.h>
 #include "sellcategory.h"
 
+/** @brief Constructor
+  *
+  * Make also the model for report
+  */
 sellCategory::sellCategory(QWidget *parent):pluginInterface(parent)
 {
     m_table = new simpleTable(this);
@@ -48,6 +52,9 @@ sellCategory::sellCategory(QWidget *parent):pluginInterface(parent)
     setLayout(layout);
 }
 
+/** @brief Update the report for each category selected
+  *
+  */
 void sellCategory::updateReport()
 {
     int rowDone = 0;
@@ -100,6 +107,5 @@ void sellCategory::updateReport()
         }
     }
 }
-
 
 Q_EXPORT_PLUGIN2(sellcategory, sellCategory);

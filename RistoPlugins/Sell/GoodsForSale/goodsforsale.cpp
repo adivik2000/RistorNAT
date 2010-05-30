@@ -49,10 +49,8 @@ goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
     setLayout(layout);
 }
 
-goodsForSale::~goodsForSale()
-{
-}
-
+/** @brief Update the average cost for articles selected
+  */
 void goodsForSale::updateCost()
 {
     simpleQuery query("set_article_average_cost");

@@ -21,6 +21,14 @@
 
 #include "plugininterface.h"
 
+/** @brief Keep your stocks quantities updated
+  *
+  * The stock is updated after every purchasing and sell.
+  * @image html stock.png
+  * You could modify only the quantity, to re-align with your effective
+  * quantities, by double-clicking in the Quantity column.\n
+  * Inserting or removing elements is handled automatically by RistorNAT.
+  */
 class Stock : public pluginInterface
 {
     Q_OBJECT
@@ -36,6 +44,9 @@ public:
     /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/fornitore48x48.png");  }
 
+    /** @brief Plugin's family
+      * @return Expense
+      */
     QString family() { return "Expense"; }
 };
 

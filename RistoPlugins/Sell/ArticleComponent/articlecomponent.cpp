@@ -23,6 +23,10 @@
 #include <QDebug>
 #include <QtPlugin>
 
+/** @brief Constructor
+  *
+  * @param parent Parent
+  */
 articleComponent::articleComponent(QWidget *parent) :
     pluginInterface(parent),ui(new Ui::articleComponentUi)
 {
@@ -35,11 +39,14 @@ articleComponent::articleComponent(QWidget *parent) :
     ui->tableView->addRelation(3,"unit_of_measurement","name","name");
 }
 
+/** @brief Deconstructor
+  */
 articleComponent::~articleComponent()
 {
     delete ui;
 }
 
+/** @brief Retranslate UI */
 void articleComponent::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -52,6 +59,8 @@ void articleComponent::changeEvent(QEvent *e)
     }
 }
 
+/** @brief Change articles displayed on the table
+  */
 void articleComponent::sellingChanged()
 {
     if (likely(ui->tableView->isDirty())) {
@@ -80,6 +89,7 @@ void articleComponent::sellingChanged()
     ui->tableView->setDefaultValue(1,pk,true);
 }
 
+/** @brief Refresh the combobox each time plugin is displayed */
 void articleComponent::aboutToBeOpened()
 {
     ui->comboSelling->refresh();

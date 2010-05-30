@@ -23,13 +23,17 @@
 #include "ui_sellcategorydetail.h"
 class simpleTable;
 
-/** @brief Manage selling category [Sell set]
+/** @brief Manage selling category
   *
   * With this plugin you can easily manage the selling categories for
   * the selling articles.
-  * @image html sell_category.tiff
-  * In the <b>code</b> column, insert a brief code for the category;
-  * In the <b>description</b> column, insert the name of the category.
+  * @image html sell_category.png
+  *
+  * In the first table, you could insert, edit or remove categories.\n
+  * @par Report
+  * If you select one or more categories and the period of which you
+  * need statistical information, after pressing Ok you will see the report
+  * in the second table. For each category, will be reported the amount.
   */
 class sellCategory : public pluginInterface {
     Q_OBJECT
@@ -45,16 +49,20 @@ public:
       */
     QString name() { return tr("Sell Category"); }
 
+    /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/categoria_cliente48x48.png"); }
 
+    /** @brief Plugin's family
+      * @return Sell
+      */
     QString family() { return "Sell"; };
 
 public slots:
     void updateReport();
 
 private:
-    simpleTable *m_table;
-    Ui::sellCategoryDetail *m_detail;
+    simpleTable *m_table; /**< @brief Table for displaying categories */
+    Ui::sellCategoryDetail *m_detail; /**< @brief Detail report */
 };
 
 #endif // SELLCATEGORY_H

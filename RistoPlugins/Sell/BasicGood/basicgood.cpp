@@ -25,6 +25,10 @@
 #include <QToolBar>
 #include <QAction>
 
+/** @brief Constructor
+  *
+  * @param parent Parent
+  */
 basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 {
     QToolBar *toolBar = new QToolBar(this);
@@ -37,6 +41,7 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
     m_table->setTableName("basic_good");
     m_table->setColumnWidth(0,300);
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table->addRelation(1,"unit_of_measurement","name","name");
 
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(toolBar);
@@ -47,6 +52,8 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
     connect(m_refresh,SIGNAL(triggered()),this,SLOT(refreshAvgCost()));
 }
 
+/** @brief Refresh the average cost for goods selected
+  */
 void basicGood::refreshAvgCost()
 {
     /** @todo date are always null */
@@ -84,15 +91,18 @@ void basicGood::refreshAvgCost()
     }
 }
 
+/** @brief Delete goods from stock
+  */
 void basicGood::deleteFromStock()
 {
-    simpleQuery query("check_good_in_doc");
+    simpleQuery query;
     paramList param;
 
     QItemSelectionModel *_selectionModel = m_table->selectionModel();
     QModelIndexList indexes = _selectionModel->selectedRows();
 
     foreach(QModelIndex index, indexes) {
+        query.setFunctionName("check_good_in_doc");
         param.append(index.data());
         query.setParameters(param);
 

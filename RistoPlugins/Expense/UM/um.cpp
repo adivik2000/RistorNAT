@@ -27,7 +27,7 @@
 /** @brief Constructor
   *
   */
-um::um(QWidget *parent):pluginInterface(parent)
+UnitOfMeasurement::UnitOfMeasurement(QWidget *parent):pluginInterface(parent)
 {
     simpleTable *tableComp = new simpleTable(this);
     comboBoxDelegate *comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
@@ -47,10 +47,4 @@ um::um(QWidget *parent):pluginInterface(parent)
     layout->addWidget(tableComp,1,0);
 }
 
-/** @brief Deconstructor
-  *
-  */
-um::~um()
-{ }
-
-Q_EXPORT_PLUGIN2(um, um);
+Q_EXPORT_PLUGIN2(UnitOfMeasurement, UnitOfMeasurement);

@@ -23,14 +23,17 @@
 
 class simpleTable;
 
-/** @brief Store and retrieve your basic good [Sell set]
+/** @brief Store and retrieve your basic good
   *
   * A basic good is a natural product that help you to cook various thing.
-  * For example, tomatoes are a basic good.\n
-  * For store and retrieve your basic good, you can use this interface:
-  * @image html basic_good.tiff
-  * - In the <b>code</b> column insert a brief code, like COD001
-  * - In the <b>description</b> column insert the name of the basic good.
+  * For example, tomatoes are basic goods.\n
+  * @image html basic_good.png
+  * Use the table for inserting, editing or removing basic goods.
+  * In <b>Name</b> column, insert the name of the good, in <b>um</b> its unit
+  * of measurement.
+  * @par Toolbar
+  * Pressing Refresh cost, you will refresh the average cost for the unit of
+  * measurement selected.
   *
   */
 class basicGood : public pluginInterface {
@@ -48,8 +51,13 @@ public:
       */
     virtual QString name() { return tr("Basic Good"); }
 
+    /** @brief Plugin's icon
+      */
     QIcon icon() { return QIcon(":/codice_a_barre48x48.png"); }
 
+    /** @brief Plugin's family
+      * @return Sell
+      */
     QString family() { return "Sell"; }
 
 private slots:
@@ -57,7 +65,7 @@ private slots:
     void refreshAvgCost();
 
 private:
-    simpleTable *m_table;
+    simpleTable *m_table; /**< Main table */
 };
 
 #endif // BASICGOOD_H

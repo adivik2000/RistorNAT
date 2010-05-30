@@ -32,17 +32,36 @@ namespace Ui {
 
 /** @brief User interface for ManagementCost
   *
-  * @image html ManagementCost.tiff
+  * @image html management_cost.png
   *
-  * On the top, you could check if you're inserting a Purchasing Cost
-  * or a Good Cost. After you choice, you can select the Seller from the
-  * combobox, and then insert the date and the number.\n
-  * After you insert the number, the table view is populated if there already
-  * exist a previous document, or a blank model if it is empty.\n
-  * You could now insert / edit / delete row as the usual way.\n
-  * On the top, you see three buttons: <b>Ok</b> is for saving, <b>Delete</b>
-  * is for deleting document an the row linked in, and <b>Cancel</b> discard
-  * the actual modifications.
+  * @par Header
+  * In the header section, you must insert the header of the invoice, with
+  * the classical seller selection (use seller plugin to insert/edit/remove sellers),
+  * the date and the reference number.\n
+  * You <b>must</b> select if you want to insert Food & Beverage cost or if you
+  * want to insert a management cost, for statistical purpose.
+  *
+  * @par Row
+  * Depending of what kind of cost you've typed (F&B or purchasing) the table
+  * row will be populated. The column are:
+  * -# For Food&Beverage:\n
+  * <b>Good</b> (good you have purchased, use basicGood to insert/edit/remove goods \n
+  * <b>Quantity</b> the quantity you have purchased \n
+  * <b>UM</b> Indicates the unit of measure for the good \n
+  * <b>Single price</b> Indicates the price for 1 (one) unit (which you have
+  *  previously selected).
+  * -# For Purchasing costs:\n
+  * <b>Category</b> for the category of the cost
+  * <b>Price</b> the price of the cost.
+  *
+  * @par Toolbar
+  * The commands in toolbar are:\n
+  * <b>Ok</b> Save all the information, Header and Row, in the database and
+  * clean the interface.\n
+  * <b>Clean</b> Clean the interface without saving.\n
+  * <b>Delete</b> Delete the documents and its row from the database.\n
+  * <b>List Document</b> Get a list of document. Remember to select the type
+  * before list documents.
   */
 class managementCost : public pluginInterface {
     Q_OBJECT
@@ -51,16 +70,19 @@ public:
     managementCost(QWidget *parent = 0);
     ~managementCost();
 
-    void setIconPath(const QString& iconPath);
-
     /** @brief Name of the plugin
-     *  @return Plugin name
+     *  @return Plugin name, Management Cost
      */
     virtual QString name() { return tr("Management\nCost") ; }
 
-    /** @brief Plugin's icon */
+    /** @brief Plugin's icon
+      * @return icon for cassa48x48.png
+      */
     QIcon icon() { return QIcon(":/cassa48x48.png");  }
 
+    /** @brief Plugin's family
+      * @return Expense
+      */
     QString family() { return "Expense"; }
 
     void aboutToBeOpened();
@@ -86,11 +108,14 @@ protected:
 private:
     Ui::managementCostUi ui; /**< @brief UserInterface */
     QVariant m_documentId; /**< @brief Active document id */
-    comboBoxDelegate *m_comboCategory;
-    comboBoxDelegate *m_comboUM;
-    comboBoxDelegate *m_comboGood;
-    updateAmountPurchDelegate *m_purchPriceDel;
-    updateAmountGoodsDelegate *m_goodsDel;
+    comboBoxDelegate *m_comboCategory; /** @brief Delegate for category */
+    comboBoxDelegate *m_comboUM; /** @brief Delegate for UM */
+    comboBoxDelegate *m_comboGood; /** @brief Delegate for goods */
+    updateAmountPurchDelegate *m_purchPriceDel; /** @brief Delegate for
+                                                  * updating the amount in
+                                                  * purchasing cost*/
+    updateAmountGoodsDelegate *m_goodsDel; /** @brief Delegate for updating
+                                             * the amount in goods cost */
 };
 
 #endif // COSTUI_H

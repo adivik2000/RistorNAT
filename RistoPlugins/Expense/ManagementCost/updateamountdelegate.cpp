@@ -18,7 +18,6 @@
  */
 #include "updateamountdelegate.h"
 #include <QDoubleSpinBox>
-#include <QDebug>
 
 /** @brief Set data in the model, update amount on the lcd
   *

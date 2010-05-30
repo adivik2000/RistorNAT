@@ -25,15 +25,18 @@
 #include "ui_goodscategorydetail.h"
 class simpleTable;
 
-/** @brief Manage the good's categories [Sell set]
+/** @brief Manage the article's categories
   *
-  * With this plugin you can easily manage the categories of goods.
-  * @image html goods_category.tiff
-  * - In the <b>code</b> column insert a brief code for the category.
-  * - In the <b>description</b> column insert the name of the category.
+  * With this plugin you can easily manage the categories of articles.
+  * @image html goods_category.png
+  * You could insert, edit or remove categories by right-clicking into the
+  * first table.
   *
-  * These entries will be referenced by an high number of plugins, like
-  * basicGood.
+  * @par Report
+  * For each category selected, you could generate a report by clicking into
+  * Ok button. Be sure to select the period you want with the two date editor.\n
+  * For each category will be reported the selled amount.
+  *
   */
 class goodsCategory : public pluginInterface {
     Q_OBJECT
@@ -49,15 +52,20 @@ public:
       */
     QString name() { return tr("Goods Category"); }
 
+    /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/categoria_articolo48x48.png"); }
 
+    /** @brief Plugin's family
+      * @return Sell
+      */
     QString family() { return tr("Sell"); }
+
 public slots:
     void updateReport();
 
 private:
-    Ui::goodsCategoryDetail *m_detail;
-    simpleTable *m_table;
+    Ui::goodsCategoryDetail *m_detail; /**< @brief Detail */
+    simpleTable *m_table; /**< @brief Main table */
 };
 
 #endif // GOODSCATEGORY_H

@@ -26,10 +26,18 @@
 #include "plugininterface.h"
 #include "ui_articlecomponent.h"
 
+/** @brief Namespace for UI */
 namespace Ui {
     class articleComponentUi;
 }
 
+/** @brief Manage composed articles
+  *
+  * Sometimes, an article is composed by many articles. Here you could
+  * specify each basic good which are in a selling article.
+  * @image html article_component.png
+  *
+  */
 class articleComponent : public pluginInterface {
     Q_OBJECT
     Q_INTERFACES(pluginInterface)
@@ -37,6 +45,7 @@ public:
     articleComponent(QWidget *parent = 0);
     ~articleComponent();
 
+    /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/composizione_listino24x24.png"); }
 
     /** @brief Name of the plugin
@@ -44,6 +53,9 @@ public:
       */
     QString name() { return tr("Article\nComponent"); }
 
+    /** @brief Plugin's family
+      * @return Sell
+      */
     QString family() { return "Sell"; }
 
     void aboutToBeOpened();
@@ -55,7 +67,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::articleComponentUi *ui;
+    Ui::articleComponentUi *ui; /**< @brief Ui object */
 };
 
 #endif // COMPONENTUI_H

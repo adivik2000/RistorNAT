@@ -22,10 +22,25 @@
 #include "plugininterface.h"
 #include "ui_managementcategory.h"
 
+/** @brief Namespace for UI classes */
 namespace Ui {
     class managementCategoryUi;
 }
 
+/** @brief Manage management category
+  *
+  * For each category, like Entertainment (where you'll place all expense
+  * for entertainment), you could retrieve the amount, selecting the period.
+  * @image html management_category.png
+  * In the first table, you could insert, edit or delete category, by
+  * right-clicking into the table. Edit is also possible, by double-clicking on
+  * the item you want to modify.\n
+  * If you select one or more category, and the period (using the two date editor
+  * date from and date to), by pressing Ok you'll have a report, for each
+  * category selected, of its total amount. If you click on one row, you'll
+  * have detailed report, with each documents which have contribuited to the
+  * amount.
+  */
 class managementCategory : public pluginInterface {
     Q_OBJECT
     Q_INTERFACES(pluginInterface)
@@ -34,13 +49,16 @@ public:
     ~managementCategory();
 
     /** @brief Name of the plugin
-     *  @return Plugin name
+     *  @return Name: Management Category
      */
     virtual QString name() { return tr("Management\nCategory") ; }
 
     /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/journal.png");  }
 
+    /** @brief Plugin's family
+      * @return Family "Expense"
+      */
     QString family() { return "Expense"; }
 
 public slots:
@@ -52,8 +70,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::managementCategoryUi ui;
-    QStandardItemModel m_viewModel;
+    Ui::managementCategoryUi ui; /** @brief User interface object */
+    QStandardItemModel m_viewModel; /** @brief Model for the detailed view */
 };
 
 #endif // managementCategory_H

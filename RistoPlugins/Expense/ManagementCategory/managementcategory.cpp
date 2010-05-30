@@ -22,6 +22,10 @@
 #include <QMessageBox>
 #include <QtPlugin>
 
+/** @brief Constructor
+  *
+  * Set the table to cost_category, and populate the detailed model.
+  */
 managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent)
 {
     ui.setupUi(this);
@@ -38,13 +42,19 @@ managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent
     QStandardItemModel *model = new QStandardItemModel(this);
     ui.tableViewDetailed->setModel(model);
 
-    connect(ui.tableView,SIGNAL(pressed(QModelIndex)),this,SLOT(showDetail(QModelIndex)));
+    connect(ui.tableView,SIGNAL(pressed(QModelIndex)),this,
+            SLOT(showDetail(QModelIndex)));
 }
 
+/** @brief Deconstructor
+  */
 managementCategory::~managementCategory()
 {
 }
 
+/** @brief Retranslate UI
+  * @param e event
+  */
 void managementCategory::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -57,6 +67,12 @@ void managementCategory::changeEvent(QEvent *e)
     }
 }
 
+/** @brief Display a general report model
+  *
+  * The report has two columns: Category, which references category, and
+  * Amount, which references the total amount for the category, in the period
+  * selected by the user.
+  */
 void managementCategory::okPressed()
 {
     int rowDone = 0;
@@ -98,7 +114,7 @@ void managementCategory::okPressed()
             }
             QStandardItem *item = new QStandardItem(category.toString());
             QStandardItem *item2 = new QStandardItem(model->data(
-                    model->index(0,0)).toString());
+                    model->index(0,0)).toString() + " $");
 
             modelView->setItem(rowDone,0,item);
             modelView->setItem(rowDone,1,item2);
@@ -109,6 +125,12 @@ void managementCategory::okPressed()
     }
 }
 
+/** @brief Display detail about a category and its amount
+  *
+  * If the user clicks on a category in the report model, another
+  * detailed report appear, with each documents (and the import) which contribuite
+  * to the amount for the period selected.
+  */
 void managementCategory::showDetail(QModelIndex index)
 {
     QVariant category;
@@ -138,6 +160,9 @@ void managementCategory::showDetail(QModelIndex index)
     }
 }
 
+/** @brief If the table is modified, ask to save information before quit.
+  *
+  */
 void managementCategory::askToSave()
 {
     if (ui.tableCategory->isDirty()) {

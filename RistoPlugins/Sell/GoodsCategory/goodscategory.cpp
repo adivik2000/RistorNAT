@@ -24,6 +24,11 @@
 #include <simpletable.h>
 #include <simplequery.h>
 
+/** @brief Constructor
+  *
+  * Make also the model for report
+  * @param parent Parent
+  */
 goodsCategory::goodsCategory(QWidget *parent):pluginInterface(parent)
 {
     m_table = new simpleTable(this);
@@ -49,6 +54,8 @@ goodsCategory::goodsCategory(QWidget *parent):pluginInterface(parent)
     setLayout(layout);
 }
 
+/** @brief Update the report table for selected categories
+  */
 void goodsCategory::updateReport()
 {
     int rowDone = 0;

@@ -28,7 +28,7 @@
 
 /** @brief Constructor
   *
-  * Build a Cost interface.
+  * Build the interface and create/connect action in the toolbar.
   */
 managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
 {
@@ -92,10 +92,9 @@ void managementCost::changeEvent(QEvent *e)
 
 /** @brief Fill the table with the information about the document (if exist)
   *
-  * The function is called when the user click outside, or press tab, in the
-  * number line edit. When this occour, this function will search in the archives
-  * if exists a document with the param specified in the header section, and
-  * populate the table.
+  * Search in the archives a document with the param specified in the
+  * header section, and populate the table if it exists with its information.
+  *
   * @see populateTable
   */
 void managementCost::goPressed()
@@ -157,12 +156,13 @@ void managementCost::goPressed()
 
 /** @brief Get the information from database
   *
-  * Helper function to numberChanged, get the information from the
-  * database and set it to the table.
+  * Get the information about the document from the database.
+  *
   * @return ID of the document created or retrieved if exist
   * @param functionName name of the database function for retrieving the data
   * about the document
   * @param rowTableName Name of the table which contain the row of the document
+  * @param amountFnName Name of the function which saves amount
   */
 QVariant managementCost::populateTable(const QString& functionName,
                                const QString& rowTableName,
@@ -220,8 +220,7 @@ QVariant managementCost::populateTable(const QString& functionName,
     return m_documentId;
 }
 
-/** @brief Enable the header section
-  * @param Enable or disable the header section
+/** @brief Enable or disable the header section
   * @param enable True if you want to enable, false to disable.
   */
 void managementCost::enableHeader(bool enable)
@@ -236,6 +235,8 @@ void managementCost::enableHeader(bool enable)
 
 /** @brief Save the changes
   *
+  * After saving, clear all things.
+  * @see undoPressed
   */
 void managementCost::okPressed()
 {
@@ -263,7 +264,7 @@ void managementCost::undoPressed()
     m_documentId = QVariant();
 }
 
-/** @brief Delete a document
+/** @brief Delete a document from database
   *
   */
 void managementCost::deletePressed()
@@ -376,6 +377,9 @@ void managementCost::listPressed()
         ui.tableView->setColumnWidth(i,100);
 }
 
+/** @brief Save in the database the amount of the document
+  *
+  */
 void managementCost::saveAmountDisplayed()
 {
     Q_ASSERT(m_documentId.isValid());
@@ -397,6 +401,11 @@ void managementCost::saveAmountDisplayed()
     }
 }
 
+/** @brief Get the amount from the row pointed by the idx
+  *
+  * @param idx Index for the row.
+  * @return the amount
+  */
 double managementCost::getAmountForRow(QModelIndex idx)
 {
     bool ok;
@@ -423,6 +432,9 @@ double managementCost::getAmountForRow(QModelIndex idx)
     return val;
 }
 
+/** @brief Substract amount of row selected from the amount displayed.
+  *
+  */
 void managementCost::delFromAmountDisplayed()
 {
     QItemSelectionModel *_selectionModel = ui.tableView->selectionModel();
@@ -445,6 +457,9 @@ void managementCost::delFromAmountDisplayed()
     saveAmountDisplayed();
 }
 
+/** @brief Add amount of row selected to the amount displayed.
+  *
+  */
 void managementCost::addToAmountDisplayed()
 {
     QItemSelectionModel *_selectionModel = ui.tableView->selectionModel();
@@ -462,6 +477,9 @@ void managementCost::addToAmountDisplayed()
     saveAmountDisplayed();
 }
 
+/** @brief Refresh the combobox when the widget is displayed
+  *
+  */
 void managementCost::aboutToBeOpened()
 {
     ui.comboSeller->refresh();

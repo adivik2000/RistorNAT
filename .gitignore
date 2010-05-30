@@ -1,23 +1,18 @@
-# ignore objects and archives
+# ignore objects, archives and Qt files
 *.[oa]
-
-# ignore the graphic items
-*graphicsItem*
-
-#ignore the moc object
 moc_*.cpp
 ui_*.h
 qrc_*.cpp
-build/*
+.build/*
+Plugins
 
 #ignore the qmake os x files
 *xcodeproj
 *.pro.user
 *Makefile
 
-#ignore the output dir
-Plugins
-
+#ignore the output files
+doc/html
 RistorNAT
 Database/DatabaseSchema.sql
 Database/DatabaseFn.sql

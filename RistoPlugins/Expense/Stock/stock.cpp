@@ -20,10 +20,11 @@
 #include <QtPlugin>
 #include <simpletable.h>
 
+/** @brief Constructor
+  */
 Stock::Stock(QWidget *parent):pluginInterface(parent)
 {
-    simpleTable *table = new simpleTable(parent);
-
+    simpleTable *table = new simpleTable(this);
     table->setTableName("stock");
 
     QGridLayout *layout = new QGridLayout(this);

@@ -23,10 +23,24 @@
 #include <QStandardItemModel>
 #include "ui_seller.h"
 
+/** @brief Namespace for UI components */
 namespace Ui {
     class sellerUi;
 }
 
+/** @brief Manage sellers
+  *
+  * With this class you could insert, edit or remove sellers, and get
+  * statistical informations about them.\n
+  * @image html sellers.png
+  * @par Main table
+  * Here you could insert, edit or remove sellers, with a right-click on the
+  * table.
+  * @par Statistical report
+  * Select one or more sellers, then select the period (using the two date
+  * editor). Pressing Ok button you could see statistical information (like
+  * amount payed) about each sellers.
+  */
 class seller : public pluginInterface {
     Q_OBJECT
     Q_INTERFACES(pluginInterface);
@@ -42,6 +56,9 @@ public:
     /** @brief Plugin's icon */
     QIcon icon() { return QIcon(":/fornitore48x48.png");  }
 
+    /** @brief Plugin's family
+      * @return Expense
+      */
     QString family() { return "Expense"; }
 
 public slots:
@@ -52,8 +69,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::sellerUi ui;
-    QStandardItemModel m_viewModel;
+    Ui::sellerUi ui; /**< @brief User interface object */
+    QStandardItemModel m_viewModel; /**< @brief Model for report table */
 };
 
 #endif // seller_H
