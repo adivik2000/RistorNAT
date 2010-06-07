@@ -77,7 +77,7 @@ void goodsCategory::updateReport()
         param.append(QVariant(m_detail->dateFrom->date()));
         param.append(QVariant(m_detail->dateTo->date()));
 
-        simpleQuery query("report_goodscategory_amount",param);
+        simpleQuery query("report_goodcategory_amount",param);
 
         QAbstractItemModel *model = query.getResult();
         QVariant amount;
