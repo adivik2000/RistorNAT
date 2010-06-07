@@ -5,7 +5,7 @@ TARGET = $$qtLibraryTarget(UtilWork)
 include(../../../common.pri)
 
 CONFIG += static
-DESTDIR = ../
+DESTDIR = ./
 
 HEADERS += workui.h
 SOURCES += workui.cpp

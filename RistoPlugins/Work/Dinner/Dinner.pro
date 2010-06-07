@@ -5,7 +5,7 @@ TARGET = $$qtLibraryTarget(Dinner)
 include(../../../common.pri)
 
 INCLUDEPATH += ../Util
-LIBS += -L../ -lUtilWork
+LIBS += -L../Util -lUtilWork
 
 HEADERS += dinner.h
 TRANSLATIONS += $$TARGET_it.ts
