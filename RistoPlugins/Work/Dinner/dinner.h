@@ -47,18 +47,16 @@ public:
       */
     Dinner(QWidget *parent = 0): workUi(parent) {
         connect(m_ui->dateEdit,SIGNAL(dateChanged(QDate)),this,SLOT(dateChanged(QDate)));
+        m_ui->dateEdit->setDate(QDate::currentDate());
     }
-
-    /** @brief Deconstructor
-      *
-      */
-    ~Dinner() { }
 
     /** @brief Plugin's name
       * @return Translated plugin's name
       */
     QString name() { return tr("Dinner\nSales"); }
 
+    /** @brief Plugin's icon
+      */
     QIcon icon() { return QIcon(":/listino48x48.png"); }
 
 protected slots:

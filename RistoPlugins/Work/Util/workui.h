@@ -91,7 +91,8 @@ protected:
 class comboArticleDelegate: public comboBoxDelegate
 {
 public:
-    comboArticleDelegate(QObject *parent):comboBoxDelegate("good_for_sale",0,3,parent) { }
+    comboArticleDelegate(QObject *parent):comboBoxDelegate("good_for_sale",0,
+                                                           1,parent) { }
 
     void setModelData(QWidget *editor, QAbstractItemModel *model,
                       const QModelIndex &index) const
@@ -99,6 +100,7 @@ public:
         comboBoxDelegate::setModelData(editor,model,index);
         simpleCombo *combo = static_cast<simpleCombo*>(editor);
         model->setData(index.sibling(index.row(),0),combo->getPrimaryKeyOfSelected());
+        model->setData(index.sibling(index.row(),1),combo->currentText());
         model->setData(index.sibling(index.row(),3),combo->getValueAtColumn(6));
     }
 };

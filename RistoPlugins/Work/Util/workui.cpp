@@ -225,7 +225,10 @@ void workUi::updateAmount(QStandardItem *item)
 
 void workUi::newRowPressed()
 {
-    QStandardItemModel *model = static_cast<QStandardItemModel*>(m_ui->tableComanda->model());
+    QStandardItemModel *model = qobject_cast<QStandardItemModel*>(
+            m_ui->tableComanda->model());
+    Q_ASSERT(model != 0);
+
     QStandardItem *item = new QStandardItem();
     QStandardItem *item2 = new QStandardItem();
     QStandardItem *item3 = new QStandardItem();
@@ -263,6 +266,13 @@ void workUi::deleteRow()
     }
 
     m_modified = true;
+
+    if (indexes.isEmpty()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.warning(0,"",tr("Select one or more rows."),QMessageBox::Ok);
+        m_modified = false;
+    }
 }
 
 /** @brief
@@ -270,7 +280,7 @@ void workUi::deleteRow()
 void workUi::addComanda()
 {
     QStandardItemModel *modelEverything, *modelComanda;
-    modelComanda = dynamic_cast<QStandardItemModel*>(m_ui->tableComanda->model());
+    modelComanda = qobject_cast<QStandardItemModel*>(m_ui->tableComanda->model());
     modelEverything = qobject_cast<QStandardItemModel*>(m_ui->tableEverything->model());
     Q_ASSERT(modelComanda != 0 && modelEverything != 0);
 
