@@ -1,0 +1,22 @@
+Name:
+RistorNAT
+ 
+Description:
+Managing restaurant in KISS (Keep It Simple Stupid) way
+ 
+Installing:
+See INSTALL
+
+Platform assumptions:
+Generally, all platform where Qt and PostgreSQL run.
+Tested: Linux (ppc, x86_64, i686), Mac OS X (ppc, intel).
+ 
+Software assumptions:
+Qt (preferred >= 4.6.0, probably run >= 4.4)
+PostgreSQL (preferred >= 8.4.0, probably run >= 8.4.3)
+
+Known issues:
+Uhm, there are no known issues, but there are issues (I think).
+ 
+Author(s):
+See AUTHOR
