@@ -33,6 +33,15 @@
        <day>1</day>
       </datetime>
      </property>
+     <property name="currentSection">
+      <enum>QDateTimeEdit::DaySection</enum>
+     </property>
+     <property name="displayFormat">
+      <string>d/M/yy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="1" column="2">
@@ -53,6 +62,15 @@
        <month>1</month>
        <day>1</day>
       </datetime>
+     </property>
+     <property name="currentSection">
+      <enum>QDateTimeEdit::DaySection</enum>
+     </property>
+     <property name="displayFormat">
+      <string>d/M/yy</string>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
