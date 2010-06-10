@@ -2,14 +2,20 @@
 #include <QStandardItemModel>
 #include <QHash>
 #include <simplequery.h>
-#include <QSqlQuery>
 
+/** @internal
+  * @brief Test management category functions
+  *
+  * The function tested are: report_management_category and
+  * report_management_category_detailed.
+  */
 class TestManagementCategory: public QObject
 {
     Q_OBJECT
 private slots:
     void initTestCase();
-    void simple_report();
+    void report_management_category_test();
+    void report_management_category_detailed_test();
     void cleanupTestCase();
 private:
     void insertCategories();
@@ -19,7 +25,10 @@ private:
     void populateAskReply();
 
     test_t testSimple;
+    test_t testComplex;
+
     TestingSQL *referenceSimple;
+    TestingSQL *referenceComplex;
 };
 
 void TestManagementCategory::populateAskReply()
@@ -33,6 +42,27 @@ void TestManagementCategory::populateAskReply()
             QVariant("Category1");
 
     testSimple.insert(param,res_simpletest);
+    param.clear();
+
+    // Test Complex
+
+    QStandardItemModel *res_comptest = new QStandardItemModel(2,4,this);
+    QList<QVariant> res;
+
+    res << QVariant(QDate(2010,1,1)) << QVariant("Supplier1") << QVariant(1) <<
+            QVariant(100.0);
+    insert_in_model(res_comptest,res,0);
+    res.clear();
+
+    res << QVariant(QDate(2009,1,1)) << QVariant("Supplier1") << QVariant(3) <<
+            QVariant(300.0);
+    insert_in_model(res_comptest,res,1);
+    res.clear();
+
+    param << QVariant(QDate(2009,1,1)) << QVariant(QDate(2010,1,1)) <<
+            QVariant("Category1");
+
+    testComplex.insert(param,res_comptest);
 }
 
 void TestManagementCategory::insertCategories()
@@ -87,17 +117,24 @@ void TestManagementCategory::insertRows()
 void TestManagementCategory::initTestCase()
 {
     referenceSimple = new TestingSQL("report_management_category", this);
+    referenceComplex= new TestingSQL("report_management_category_detailed",this);
     referenceSimple->initDatabase();
     insertCategories();
     insertSuppliers();
     insertDocuments();
     insertRows();
+
     populateAskReply();
 }
 
-void TestManagementCategory::simple_report()
+void TestManagementCategory::report_management_category_test()
 {
     referenceSimple->do_test(testSimple);
+}
+
+void TestManagementCategory::report_management_category_detailed_test()
+{
+    referenceComplex->do_test(testComplex);
 }
 
 void TestManagementCategory::cleanupTestCase()
