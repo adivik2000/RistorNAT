@@ -1,10 +1,16 @@
 # -------------------------------------------------
-# MngmCostReport.pro
+# ManagementCategory.pro
 # -------------------------------------------------
-TARGET = $$qtLibraryTarget(ManagementCategory)
 include(../../../common.pri)
 
-HEADERS += managementcategory.h
-SOURCES += managementcategory.cpp
-FORMS += managementcategory.ui
-OTHER_FILES += table.sql function.sql
+contains(MAKE_TEST, true) {
+	TARGET = "Test"
+	SOURCES = testmanagementcategory.cpp
+} else {
+	TARGET = $$qtLibraryTarget(ManagementCategory)
+	HEADERS += managementcategory.h
+	SOURCES += managementcategory.cpp
+	FORMS += managementcategory.ui
+	OTHER_FILES += table.sql function.sql
+}
+

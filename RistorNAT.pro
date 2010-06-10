@@ -6,5 +6,7 @@ OTHER_FILES += common.pri \
     script/linux/RistorNAT.sh \
     script/gen_dbscript.sh \
     Database/DatabaseCreation.sql
+
 QMAKE_CLEAN += Plugins/*
 QMAKE_DISTCLEAN += .build Plugins
+
