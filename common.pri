@@ -8,9 +8,9 @@ MAKE_TEST = false
 CONFIG += ppc
 CONFIG += warn_on
 ROOT = $$system(pwd)
-QT += testlib
 
 contains(MAKE_TEST, true) {
+	QT += testlib
 } else {
 	TEMPLATE = lib
 	VERSION = 0.5.0
