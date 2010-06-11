@@ -52,11 +52,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     QWidget *mainWidget;
     try {
-        mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
-    } catch (QString e) {
         if (!setupDatabase())
             return;
         mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
+    } catch (QString e) {
+        qDebug() << e;
     }
 
     Q_ASSERT(mainWidget != 0);
