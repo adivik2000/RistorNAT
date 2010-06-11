@@ -30,11 +30,9 @@
 UnitOfMeasurement::UnitOfMeasurement(QWidget *parent):pluginInterface(parent)
 {
     simpleTable *tableComp = new simpleTable(this);
-    comboBoxDelegate *comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
 
     tableComp->setTableName("unit_of_measurement");
-    tableComp->addRelation(2,"unit_of_measurement","base","name");
-    tableComp->setItemDelegateForColumn(1,comboUM);
+    tableComp->addRelation(1,"unit_of_measurement","um","name");
 
     QLabel *desc_adv = new QLabel(this);
     desc_adv->setText(tr("Insert the unit of measurement which will be used"
