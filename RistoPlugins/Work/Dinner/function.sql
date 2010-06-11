@@ -63,5 +63,5 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER update_stock_for_dinner AFTER INSERT OR UPDATE OR DELETE ON d_sales
     FOR EACH ROW EXECUTE PROCEDURE update_stock_sell();
 
-CREATE TRIGGER update_last_cost_dinner AFTER INSERT OR UPDATE ON d_sales
-    FOR EACH ROW EXECUTE PROCEDURE update_last_cost();
+CREATE TRIGGER update_last_price_dinner AFTER INSERT OR UPDATE ON d_sales
+    FOR EACH ROW EXECUTE PROCEDURE update_last_price();

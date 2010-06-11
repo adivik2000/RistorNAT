@@ -87,11 +87,11 @@ CREATE OR REPLACE FUNCTION update_stock_sell()
 $$ LANGUAGE 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION update_last_cost()
+CREATE OR REPLACE FUNCTION update_last_price()
     RETURNS TRIGGER AS $$
     DECLARE
     BEGIN
-        UPDATE good_for_sale SET last_cost = NEW.sell_price
+        UPDATE good_for_sale SET last_price = NEW.sell_price
             WHERE id = NEW.article;
 
         RETURN NULL;
@@ -101,5 +101,5 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER update_stock_for_lunch AFTER INSERT OR UPDATE OR DELETE ON l_sales
     FOR EACH ROW EXECUTE PROCEDURE update_stock_sell();
 
-CREATE TRIGGER update_last_cost_lunch AFTER INSERT OR UPDATE ON l_sales
-    FOR EACH ROW EXECUTE PROCEDURE update_last_cost();
+CREATE TRIGGER update_last_price_lunch AFTER INSERT OR UPDATE ON l_sales
+    FOR EACH ROW EXECUTE PROCEDURE update_last_price();
