@@ -53,10 +53,21 @@ CREATE OR REPLACE FUNCTION report_seller_amount(p_seller VARCHAR, p_date_from DA
     DECLARE
         amount_dpc NUMERIC;
         amount_dgc NUMERIC;
+        amount NUMERIC;
     BEGIN
         SELECT * INTO amount_dpc FROM report_seller_purchasing(p_seller,p_date_from,p_date_to);
         SELECT * INTO amount_dgc FROM report_seller_goods(p_seller,p_date_from,p_date_to);
 
-        RETURN amount_dpc + amount_dgc;
+        IF amount_dpc IS NULL THEN
+            amount_dpc := 0;
+        END IF;
+
+        IF amount_dgc IS NULL THEN
+            amount_dgc := 0;
+        END IF;
+
+        amount := amount_dpc + amount_dgc;
+
+        RETURN amount;
     END;
 $$ LANGUAGE 'plpgsql';
