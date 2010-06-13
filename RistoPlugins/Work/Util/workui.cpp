@@ -40,11 +40,13 @@ workUi::workUi(QWidget *parent) :
     spinBoxDelegate *spinDel2 = new spinBoxDelegate(m_ui->tableEverything);
     m_ui->tableEverything->setItemDelegateForColumn(2,spinDel2);
 
-    spinBoxDelegate *spinDel = new spinBoxDelegate(m_ui->tableComanda);
+    totalPriceDelegate *spinDel = new totalPriceDelegate(m_ui->lcdAmount,
+                                                         2,3,m_ui->tableComanda);
     comboBoxDelegate *comboDel = new comboArticleDelegate(m_ui->tableComanda);
 
     m_ui->tableComanda->setItemDelegateForColumn(1,comboDel);
     m_ui->tableComanda->setItemDelegateForColumn(2,spinDel);
+    m_ui->tableComanda->setItemDelegateForColumn(3,spinDel);
 }
 
 /** @brief Deconstructor
@@ -89,7 +91,6 @@ QStandardItemModel* workUi::makeModel()
     model->setHeaderData(2,Qt::Horizontal,tr("Quantity"));
     model->setHeaderData(3,Qt::Horizontal,tr("Single price"));
 
-    connect(model,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(updateAmount(QStandardItem*)));
     return model;
 }
 
@@ -215,12 +216,6 @@ void workUi::dateChanged(const QDate &date)
     m_date = date;
     delete old_every;
     delete old_comanda;
-}
-
-void workUi::updateAmount(QStandardItem *item)
-{
-    if (item->column() == 3)
-        m_ui->lcdAmount->display(m_ui->lcdAmount->value()+item->text().toDouble());
 }
 
 void workUi::newRowPressed()

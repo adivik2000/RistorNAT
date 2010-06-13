@@ -63,7 +63,6 @@ public slots:
     void deleteRow();
     void newRowPressed();
     void addComanda();
-    void updateAmount(QStandardItem *item);
     void dateChanged(const QDate& date);
 
 protected slots:
