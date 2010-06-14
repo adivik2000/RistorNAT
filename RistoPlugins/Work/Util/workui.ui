@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
@@ -25,7 +25,7 @@
      <property name="title">
       <string>Header</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -36,7 +36,7 @@
       <item row="0" column="1">
        <widget class="QDateEdit" name="dateEdit">
         <property name="currentSection">
-         <enum>QDateTimeEdit::MonthSection</enum>
+         <enum>QDateTimeEdit::DaySection</enum>
         </property>
         <property name="displayFormat">
          <string>d/M/yy</string>
@@ -46,15 +46,16 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="pushSave">
         <property name="text">
-         <string>Total places</string>
+         <string>Save</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../core/res.qrc">
+          <normaloff>:/conferma24x24.png</normaloff>:/conferma24x24.png</iconset>
         </property>
        </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="spinPlaces"/>
       </item>
      </layout>
     </widget>
@@ -70,25 +71,39 @@
      <property name="title">
       <string>Comanda</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0" colspan="3">
+     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,1,0" columnminimumwidth="0,0,0,0">
+      <item row="0" column="0" colspan="4">
        <widget class="QTableView" name="tableComanda"/>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Amount</string>
+         <string>Amount Comanda</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLCDNumber" name="lcdComanda">
+        <property name="segmentStyle">
+         <enum>QLCDNumber::Flat</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>$</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Places</string>
+         <string>Places Comanda</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="2">
+      <item row="2" column="1" colspan="3">
        <widget class="QSpinBox" name="spinLocalPlaces"/>
       </item>
       <item row="3" column="0">
@@ -102,7 +117,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
+      <item row="3" column="2" colspan="2">
        <widget class="QPushButton" name="pushAdd">
         <property name="text">
          <string>Add</string>
@@ -110,13 +125,6 @@
         <property name="icon">
          <iconset resource="../../../core/res.qrc">
           <normaloff>:/rigth_arrow-32.png</normaloff>:/rigth_arrow-32.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLCDNumber" name="lcdAmount">
-        <property name="segmentStyle">
-         <enum>QLCDNumber::Flat</enum>
         </property>
        </widget>
       </item>
@@ -134,14 +142,45 @@
      <property name="title">
       <string>Everything</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="2" column="0">
+     <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,1,0">
+      <item row="0" column="0" colspan="3">
        <widget class="QTableView" name="tableEverything"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Amount Everything</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLCDNumber" name="lcdEverything">
+        <property name="segmentStyle">
+         <enum>QLCDNumber::Flat</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>$</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Total places</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QSpinBox" name="spinPlaces"/>
       </item>
       <item row="3" column="0">
        <widget class="QPushButton" name="pushDelete">
         <property name="text">
-         <string>Delete</string>
+         <string>Delete Article</string>
         </property>
         <property name="icon">
          <iconset resource="../../../core/res.qrc">
@@ -150,17 +189,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="pushSave">
-     <property name="text">
-      <string>Save</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../../core/res.qrc">
-       <normaloff>:/conferma24x24.png</normaloff>:/conferma24x24.png</iconset>
-     </property>
     </widget>
    </item>
   </layout>
@@ -214,22 +242,6 @@
     <hint type="destinationlabel">
      <x>221</x>
      <y>297</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushSave</sender>
-   <signal>clicked()</signal>
-   <receiver>workUi</receiver>
-   <slot>save()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>505</x>
-     <y>573</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>296</y>
     </hint>
    </hints>
   </connection>

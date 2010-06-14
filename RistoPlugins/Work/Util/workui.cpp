@@ -37,16 +37,20 @@ workUi::workUi(QWidget *parent) :
     m_modified = false;
     m_ui->setupUi(this);
 
-    spinBoxDelegate *spinDel2 = new spinBoxDelegate(m_ui->tableEverything);
-    m_ui->tableEverything->setItemDelegateForColumn(2,spinDel2);
+    totalPriceDelegate *spinTotal = new totalPriceDelegate(m_ui->lcdEverything,
+                                                    2,3,m_ui->tableEverything);
+    m_ui->tableEverything->setItemDelegateForColumn(2,spinTotal);
+    m_ui->tableEverything->setItemDelegateForColumn(3,spinTotal);
+    m_ui->tableEverything->hideColumn(0);
 
-    totalPriceDelegate *spinDel = new totalPriceDelegate(m_ui->lcdAmount,
+    totalPriceDelegate *spinDel = new totalPriceDelegate(m_ui->lcdComanda,
                                                          2,3,m_ui->tableComanda);
     comboBoxDelegate *comboDel = new comboArticleDelegate(m_ui->tableComanda);
 
     m_ui->tableComanda->setItemDelegateForColumn(1,comboDel);
     m_ui->tableComanda->setItemDelegateForColumn(2,spinDel);
     m_ui->tableComanda->setItemDelegateForColumn(3,spinDel);
+    m_ui->tableComanda->hideColumn(0);
 }
 
 /** @brief Deconstructor
@@ -179,7 +183,22 @@ void workUi::save()
 
     m_modified = false;
 }
-#include <QDebug>
+
+double workUi::getTotalAmount(const QAbstractItemModel *model)
+{
+    double amount = 0.0;
+    bool ok;
+    for (int i=0; i<model->rowCount(); i++) {
+        double qty = model->data(model->index(i,2)).toDouble(&ok);
+        Q_ASSERT(ok);
+        double price = model->data(model->index(i,3)).toDouble(&ok);
+        Q_ASSERT(ok);
+        amount += (qty*price);
+    }
+
+    return amount;
+}
+
 /** @brief Get a new information for the new date
   *
   * With the signal dateHasChanged, the function will convert the model
@@ -189,7 +208,7 @@ void workUi::save()
   */
 void workUi::dateChanged(const QDate &date)
 {
-    m_ui->lcdAmount->display(0.0);
+    m_ui->lcdComanda->display(0.0);
     if (askToSave()) {
         save();
     }
@@ -203,6 +222,7 @@ void workUi::dateChanged(const QDate &date)
     getSoldAtDate(query_model,date,places);
 
     new_every = makeModel(query_model);
+    m_ui->lcdEverything->display(getTotalAmount(query_model));
     new_every->setParent(m_ui->tableEverything);
     m_ui->tableEverything->setModel(new_every);
     makeMap(new_every);
@@ -241,7 +261,8 @@ void workUi::makeMap(QStandardItemModel *model)
 {
     for (int i=0;i<model->rowCount(); i++) {
         QVariant code = model->data(model->index(i,0));
-        m_articlesInserted.insert(code.toString(),i);
+        QVariant price = model->data(model->index(i,3));
+        m_articlesInserted.insert(code.toString()+price.toString(),i);
     }
 }
 
@@ -256,7 +277,8 @@ void workUi::deleteRow()
 
     foreach (index, indexes) {
         QVariant code = model->data(model->index(index.row(),0));
-        m_articlesInserted.take(code.toString());
+        QVariant price = model->data(model->index(index.row(),3));
+        m_articlesInserted.take(code.toString()+price.toString());
         m_ui->tableEverything->model()->removeRow(index.row());
     }
 
@@ -290,11 +312,13 @@ void workUi::addComanda()
         if (codeToInsert.toString().isEmpty())
             continue;
 
-        if (m_articlesInserted.contains(codeToInsert.toString())) {
-            int row = m_articlesInserted.value(codeToInsert.toString());
+        if (m_articlesInserted.contains(codeToInsert.toString()+priceToInsert.toString())) {
+            int row =m_articlesInserted.value(codeToInsert.toString()+priceToInsert.toString());
             QVariant qtyToUpdate = modelEverything->data(modelEverything->index(row,2));
+            QVariant price = modelEverything->data(modelEverything->index(row,3));
             qtyToUpdate = qtyToUpdate.toInt() + qtyToInsert.toInt();
             modelEverything->setData(modelEverything->index(row,2),qtyToUpdate);
+            m_ui->lcdEverything->display(qtyToUpdate.toDouble() * price.toDouble());
         } else {
             QStandardItem *item = new QStandardItem();
             QStandardItem *item2 = new QStandardItem();
@@ -313,13 +337,15 @@ void workUi::addComanda()
             item2->setEditable(false);
 
             modelEverything->appendRow(list);
-            m_articlesInserted.insert(codeToInsert.toString(),modelEverything->rowCount()-1);
+            m_articlesInserted.insert(codeToInsert.toString()+
+                                      priceToInsert.toString(),
+                                      modelEverything->rowCount()-1);
         }
     }
 
     modelComanda->removeRows(0,modelComanda->rowCount());
     m_ui->spinLocalPlaces->setValue(0);
-    m_ui->lcdAmount->display(0);
+    m_ui->lcdComanda->display(0);
     m_modified = true;
 }
 

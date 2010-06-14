@@ -74,6 +74,7 @@ protected:
     QStandardItemModel* makeModel(const QAbstractItemModel* itemModel);
     QStandardItemModel* makeModel();
     void makeMap(QStandardItemModel* model);
+    double getTotalAmount(const QAbstractItemModel *model);
     void saveSell(QStandardItemModel *model,const QString& fnInsertSell,
                   const QString& fnInsUpd,const QDate& date, int places);
     void getSell(QAbstractItemModel *&model,const QString& fnGetInformation,
