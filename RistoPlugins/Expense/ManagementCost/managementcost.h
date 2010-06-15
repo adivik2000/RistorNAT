@@ -114,7 +114,7 @@ private:
     updateAmountPurchDelegate *m_purchPriceDel; /** @brief Delegate for
                                                   * updating the amount in
                                                   * purchasing cost*/
-    updateAmountGoodsDelegate *m_goodsDel; /** @brief Delegate for updating
+    totalPriceDelegate *m_goodsDel; /** @brief Delegate for updating
                                              * the amount in goods cost */
 };
 

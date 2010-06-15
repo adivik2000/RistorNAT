@@ -24,6 +24,7 @@ CREATE TABLE "row_purchasing_cost"
   id INTEGER NOT NULL DEFAULT nextval('row_purchasing_cost_sequence'),
   document INTEGER REFERENCES document_purchasing_cost(id) MATCH SIMPLE
         ON UPDATE CASCADE ON DELETE RESTRICT,
+  description CHARACTER VARYING(128),
   category CHARACTER VARYING(128) REFERENCES cost_category(description)
         MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
   price NUMERIC NOT NULL,

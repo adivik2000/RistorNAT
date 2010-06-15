@@ -66,7 +66,7 @@ managementCost::managementCost(QWidget *parent) : pluginInterface(parent)
     m_comboUM = new comboBoxDelegate("unit_of_measurement",0,0,this);
     m_comboGood = new comboBoxDelegate("basic_good",0,0,this);
     m_purchPriceDel = new updateAmountPurchDelegate(ui.lcdNumber,this);
-    m_goodsDel = new updateAmountGoodsDelegate(ui.lcdNumber,this);
+    m_goodsDel = new totalPriceDelegate(ui.lcdNumber,3,5,this);
 }
 
 /** @brief Deconstructor
@@ -126,8 +126,8 @@ void managementCost::goPressed()
                                  amountName[radioPurch]);
 
     if (radioPurch) {
-        ui.tableView->setItemDelegateForColumn(3,m_purchPriceDel);
-        ui.tableView->setItemDelegateForColumn(2,m_comboCategory);
+        ui.tableView->setItemDelegateForColumn(4,m_purchPriceDel);
+        ui.tableView->setItemDelegateForColumn(3,m_comboCategory);
     } else {
         ui.tableView->setItemDelegateForColumn(2,m_comboGood);
         ui.tableView->setItemDelegateForColumn(4,m_comboUM);
@@ -421,7 +421,7 @@ double managementCost::getAmountForRow(QModelIndex idx)
         if (unlikely(!ok))
             val = -1;
     } else if (ui.radioPurchasing->isChecked()) {
-        columnPrice = 3;
+        columnPrice = 4;
         QVariant price =  idx.sibling(idx.row(),columnPrice).data();
         val = price.toDouble(&ok);
 
