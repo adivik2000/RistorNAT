@@ -21,16 +21,23 @@
 #include <simplequery.h>
 #include <QMessageBox>
 #include <QtPlugin>
-
+#include <QDebug>
 /** @brief Constructor
   *
   * Set the table to cost_category, and populate the detailed model.
   */
 managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent)
 {
+    simpleQuery query("get_description_from_purch");
+    QAbstractItemModel *model_desc = query.getResult();
+    Q_ASSERT(model_desc != 0);
+    model_desc->setHeaderData(0,Qt::Horizontal,tr("Purchased articles"));
+
     ui.setupUi(this);
 
     ui.tableCategory->setTableName("cost_category");
+    ui.tableDescription->setModel(model_desc);
+    model_desc->setParent(ui.tableDescription);
 
     m_viewModel.insertColumn(0);
     m_viewModel.insertColumn(1);
@@ -43,7 +50,11 @@ managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent
     ui.tableViewDetailed->setModel(model);
 
     connect(ui.tableView,SIGNAL(pressed(QModelIndex)),this,
-            SLOT(showDetail(QModelIndex)));
+            SLOT(showCategoryDetail(QModelIndex)));
+    connect(ui.tableCategory,SIGNAL(pressed(QModelIndex)),this,
+            SLOT(categoryClicked()));
+    connect(ui.tableDescription,SIGNAL(pressed(QModelIndex)),this,
+            SLOT(descriptionClicked()));
 }
 
 /** @brief Deconstructor
@@ -67,16 +78,40 @@ void managementCategory::changeEvent(QEvent *e)
     }
 }
 
+void managementCategory::categoryClicked()
+{
+    m_table_active[0] = true;
+    m_table_active[1] = false;
+    ui.tableDescription->selectionModel()->clearSelection();
+}
+
+void managementCategory::descriptionClicked()
+{
+    m_table_active[0] = false;
+    m_table_active[1] = true;
+    ui.tableCategory->selectionModel()->clearSelection();
+}
+
+void managementCategory::okPressed()
+{
+    if (m_table_active[0] == true) {
+        report(*ui.tableCategory, "report_management_category");
+    } else if (m_table_active[1] == true) {
+        report(*ui.tableDescription,"report_purchasing_article");
+    }
+}
+
 /** @brief Display a general report model
   *
   * The report has two columns: Category, which references category, and
   * Amount, which references the total amount for the category, in the period
   * selected by the user.
   */
-void managementCategory::okPressed()
+void managementCategory::report(const QTableView &table, const QString &fn)
 {
     int rowDone = 0;
-    QItemSelectionModel *_selectionModel = ui.tableCategory->selectionModel();
+
+    QItemSelectionModel *_selectionModel = table.selectionModel();
     QModelIndexList indexes = _selectionModel->selectedRows();
     QModelIndex index;
     QStandardItemModel *modelView = qobject_cast<QStandardItemModel*>(
@@ -84,37 +119,36 @@ void managementCategory::okPressed()
     QAbstractItemModel *modelDetailed = ui.tableViewDetailed->model();
 
     modelView->removeRows(0,modelView->rowCount());
-    modelDetailed->removeRows(0,modelDetailed->rowCount());
+    delete modelDetailed;
 
     foreach(index, indexes)
     {
-        QVariant category = index.data();
+        QVariant value = index.data();
 
         paramList param;
         param.append(QVariant(ui.dateFrom->date()));
         param.append(QVariant(ui.dateTo->date()));
-        param.append(category);
+        param.append(value);
 
-        simpleQuery query("report_management_category",param);
+        simpleQuery query(fn,param);
 
         QAbstractItemModel *model = query.getResult();
 
         if (likely (model != 0 && model->rowCount() == 1)) {
             QVariant amount = model->data(model->index(0,0));
-            if (amount.toInt() == 0) {
+            if (! amount.isValid()) {
                 QMessageBox msgBox;
                 msgBox.setIcon(QMessageBox::Warning);
-                msgBox.setText(tr("No information for the category"));
+                msgBox.setText(tr("No information"));
                 msgBox.setInformativeText(tr("There aren't information for ")
-                                             + category.toString());
+                                             + value.toString());
                 msgBox.setStandardButtons(QMessageBox::Ok);
 
                 msgBox.exec();
                 continue;
             }
-            QStandardItem *item = new QStandardItem(category.toString());
-            QStandardItem *item2 = new QStandardItem(model->data(
-                    model->index(0,0)).toString() + " $");
+            QStandardItem *item = new QStandardItem(value.toString());
+            QStandardItem *item2 = new QStandardItem(amount.toString() + " $");
 
             modelView->setItem(rowDone,0,item);
             modelView->setItem(rowDone,1,item2);
@@ -131,8 +165,11 @@ void managementCategory::okPressed()
   * detailed report appear, with each documents (and the import) which contribuite
   * to the amount for the period selected.
   */
-void managementCategory::showDetail(QModelIndex index)
+void managementCategory::showCategoryDetail(QModelIndex index)
 {
+    if (m_table_active[1] == true) {
+        return;
+    }
     QVariant category;
     category = index.sibling(index.row(),0).data();
 

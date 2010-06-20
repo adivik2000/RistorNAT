@@ -32,3 +32,15 @@ CREATE OR REPLACE FUNCTION report_management_category(p_date_from DATE,
         AND r.category=$3;
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION report_purchasing_article(p_date_from DATE,
+            p_date_to DATE, p_article VARCHAR)
+    RETURNS NUMERIC AS $$
+        SELECT SUM(r.price) FROM document_purchasing_cost AS d, row_purchasing_cost AS r
+        WHERE r.document=d.id AND d.document_date<=$2 AND d.document_date>=$1
+        AND lower(r.description)=lower($3);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_description_from_purch() RETURNS SETOF VARCHAR AS $$
+    SELECT lower(description) AS article FROM row_purchasing_cost
+        WHERE description !='' GROUP BY lower(description);
+$$ LANGUAGE SQL;

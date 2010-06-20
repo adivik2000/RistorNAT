@@ -64,14 +64,18 @@ public:
 public slots:
     void okPressed();
     void askToSave();
-    void showDetail(QModelIndex);
+    void showCategoryDetail(QModelIndex);
+    void categoryClicked();
+    void descriptionClicked();
 
 protected:
     void changeEvent(QEvent *e);
+    void report(const QTableView& table, const QString& fn);
 
 private:
     Ui::managementCategoryUi ui; /** @brief User interface object */
     QStandardItemModel m_viewModel; /** @brief Model for the detailed view */
+    bool m_table_active[2];
 };
 
 #endif // managementCategory_H
