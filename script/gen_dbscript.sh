@@ -7,8 +7,10 @@ PREFIX=RistoPlugins
 
 # Worker. DO NOT MODIFY UNLESS YOU KNOW WHAT YOU'RE DOING.
 
-if [[ $1 == "-h" ]]; then
-	echo "Usage: gendbscript.sh"
+if [[ $1 == "-h" || $1 == "--help" ]]; then
+	echo -en "Usage: gendbscript.sh\n"
+	echo -en "\tGenerate db script. Launch from topdir\n\t"
+	echo -en "and it will saves the script under Database\n"
 	exit 1
 fi
 
