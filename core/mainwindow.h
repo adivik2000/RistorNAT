@@ -104,6 +104,12 @@ class stackedWContainer;
   *
   */
 
+/** @todo Se il costo di un art e' x, lo vendo a y, voglio la % di guadagno. FOOD COST %*/
+/** @todo Complementary - uscite che costano 0 (offerte e quello che si mangiano i dip */
+/** @todo Aggiungere un modulo di riepilogo, uscite / entrate, decisamente modulare */
+/** @todo Molto piu' avanti: COSTO PERSONALE e gestione IVA */
+/** @todo Storico di uno stock, solo con il valore in $, ad ogni modifica dello stock */
+
 /** @brief User Interface namespace
   * Namespace for all the User Interface things, like widget.\n
   * Use only to separate GUI from core operations.
@@ -143,7 +149,7 @@ private:
     Ui::MainWindow *ui; /**< @brief GUI */
     QPointer<settingsUi> settingWindow; /**< @brief Settings GUI */
     QWidget* loadApp(QMenuBar *menuBar, QToolBar *toolBar);
-    Connection m_con; /**< Default connection */
+    Connection m_con; /**< @brief Default connection */
     stackedWContainer *currentPage;
     QMap<int,QString> m_numberFam;
     QMap<QString,stackedWContainer*> m_fam;
