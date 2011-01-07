@@ -86,6 +86,7 @@ CREATE OR REPLACE FUNCTION article_to_stock()
         IF TG_OP = 'INSERT' THEN
             INSERT INTO stock(article,quantity,um) VALUES (NEW.name,0,NEW.um);
         ELSE
+            DELETE FROM stock_log WHERE article = OLD.name;
             DELETE FROM stock WHERE article = OLD.name;
         END IF;
         RETURN NULL;

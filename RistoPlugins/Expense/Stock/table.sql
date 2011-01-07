@@ -3,6 +3,18 @@
  * Dep: BasicGoods,UM
  */
 
+CREATE TABLE "stock_log"
+(
+    id SERIAL,
+    article CHARACTER VARYING(128) NOT NULL REFERENCES basic_good(name) MATCH
+        SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
+    modifier INTEGER NOT NULL,
+    stock_date DATE NOT NULL,
+    um CHARACTER VARYING(5) REFERENCES unit_of_measurement(name) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT NOT NULL,
+    PRIMARY KEY(id)
+) WITH (OIDS=FALSE);
+
 CREATE TABLE "stock"
 (
     article CHARACTER VARYING(128) NOT NULL REFERENCES basic_good(name) MATCH

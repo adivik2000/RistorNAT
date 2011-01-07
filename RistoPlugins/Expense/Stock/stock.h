@@ -20,6 +20,7 @@
 #define STOCK_H
 
 #include "plugininterface.h"
+#include "ui_stock.h"
 
 /** @brief Keep your stocks quantities updated
   *
@@ -48,6 +49,10 @@ public:
       * @return Expense
       */
     QString family() { return "Expense"; }
+public slots:
+    void okPressed();
+private:
+    Ui::stockUi stockUi;
 };
 
 #endif // STOCK_H

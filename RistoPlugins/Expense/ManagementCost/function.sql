@@ -70,38 +70,33 @@ CREATE OR REPLACE FUNCTION document_goods_ins_upd(p_date DATE,
      END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION update_stock(p_quantity NUMERIC, p_article VARCHAR,
-                                        p_um VARCHAR, p_insert BOOLEAN)
-    RETURNS VOID AS $$
-    DECLARE
-        old_stock RECORD;
-        div NUMERIC;
-        new_qty NUMERIC;
-    BEGIN
-        SELECT * INTO old_stock FROM stock WHERE article=p_article;
-        div := get_div_for_um(old_stock.um,p_um);
-        new_qty := p_quantity / div;
-        IF p_insert THEN
-            UPDATE stock SET quantity=old_stock.quantity+new_qty
-                WHERE article=p_article;
-        ELSE
-            UPDATE stock SET quantity=old_stock.quantity-new_qty
-                WHERE article=p_article;
-        END IF;
-    END;
-$$ LANGUAGE 'plpgsql';
-
 CREATE OR REPLACE FUNCTION update_stocks()
     RETURNS TRIGGER AS $$
     DECLARE
+        dc_date DATE;
+        value NUMERIC;
     BEGIN
         IF TG_OP = 'INSERT' THEN
-            PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
+            SELECT document_date INTO dc_date FROM document_goods_cost WHERE
+                id=NEW.document;
+
+            value := NEW.quantity * NEW.single_price;
+            PERFORM * FROM update_stock(dc_date, NEW.good, NEW.quantity, NEW.um,TRUE);
         ELSIF TG_OP = 'UPDATE' THEN
-            PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
-            PERFORM * FROM update_stock(NEW.quantity, NEW.good, NEW.um,TRUE);
+            SELECT document_date INTO dc_date FROM document_goods_cost WHERE
+                id=OLD.document;
+            value := OLD.quantity * OLD.single_price;
+            PERFORM * FROM update_stock(dc_date, OLD.good, OLD.quantity, OLD.um,FALSE);
+
+            SELECT document_date INTO dc_date FROM document_goods_cost WHERE
+                id=NEW.document;
+            value := NEW.quantity * NEW.single_price;
+            PERFORM * FROM update_stock(dc_date, NEW.good, NEW.quantity, NEW.um,TRUE);
         ELSE
-            PERFORM * FROM update_stock(OLD.quantity, OLD.good, OLD.um,FALSE);
+            SELECT document_date INTO dc_date FROM document_goods_cost WHERE
+                id=OLD.document;
+            value := OLD.quantity * OLD.single_price;
+            PERFORM * FROM update_stock(dc_date, OLD.good, OLD.quantity, OLD.um,FALSE);
         END IF;
         RETURN NULL;
     END;

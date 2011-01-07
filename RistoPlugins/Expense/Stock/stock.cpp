@@ -18,19 +18,31 @@
  */
 #include "stock.h"
 #include <QtPlugin>
-#include <simpletable.h>
+#include <simplequery.h>
 
 /** @brief Constructor
   */
 Stock::Stock(QWidget *parent):pluginInterface(parent)
 {
-    simpleTable *table = new simpleTable(this);
-    table->setTableName("stock");
+    stockUi.setupUi(this);
+    stockUi.tableActualStock->setTableName("stock");
+}
 
-    QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(table);
+void Stock::okPressed()
+{
+    QVariant amount;
+    simpleQuery query("report_hist_stock");
+    paramList param;
+    param.append(stockUi.dateFrom->date());
+    param.append(stockUi.dateTo->date());
 
-    setLayout(layout);
+    query.setParameters(param);
+
+    query.execute(amount);
+
+    if (amount.isValid()) {
+        stockUi.lcdNumber->display(amount.toDouble());
+    }
 }
 
 Q_EXPORT_PLUGIN2(stock, Stock);
