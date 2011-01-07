@@ -245,6 +245,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushSave</sender>
+   <signal>clicked()</signal>
+   <receiver>workUi</receiver>
+   <slot>save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>296</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>deleteRow()</slot>
