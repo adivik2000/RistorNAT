@@ -53,7 +53,7 @@ CREATE OR REPLACE FUNCTION update_stock(p_date DATE, p_article VARCHAR, p_quanti
 
         IF FOUND THEN
             div := get_div_for_um(old_stock_log.um, p_um);
-            new_qty := p_quantity / div;
+            new_qty := round(p_quantity / div,5);
         ELSE
             new_qty := p_quantity;
             SELECT um INTO old_stock_log.um FROM basic_good
@@ -62,10 +62,10 @@ CREATE OR REPLACE FUNCTION update_stock(p_date DATE, p_article VARCHAR, p_quanti
 
         IF p_insert THEN
             INSERT INTO stock_log(article,modifier,stock_date,um) VALUES
-                (p_article, p_quantity, p_date, old_stock_log.um);
+                (p_article, new_qty, p_date, old_stock_log.um);
         ELSE
             INSERT INTO stock_log(article,modifier,stock_date,um) VALUES
-                (p_article, 0-p_quantity, p_date, old_stock_log.um);
+                (p_article, 0-new_qty, p_date, old_stock_log.um);
         END IF;
 
         SELECT * INTO old_stock FROM stock WHERE article=p_article;
@@ -86,7 +86,7 @@ $$ LANGUAGE 'plpgsql';
 CREATE TYPE stock_report AS
 (
     Article VARCHAR,
-    qty BIGINT,
+    qty NUMERIC,
     unit_of_measurement VARCHAR
 );
 
