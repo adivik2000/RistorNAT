@@ -65,21 +65,21 @@ CREATE OR REPLACE FUNCTION update_stock_sell()
         IF TG_OP = 'INSERT' THEN
             FOR component IN SELECT * FROM article_made_up(NEW.article) LOOP
                 PERFORM * FROM update_stock(NEW.sales_date, component.basic_component,
-                    component.quantity, component.um,FALSE);
+                    component.quantity*NEW.quantity_sold, component.um,FALSE);
             END LOOP;
         ELSIF TG_OP = 'UPDATE' THEN
             FOR component IN SELECT * FROM article_made_up(OLD.article) LOOP
                 PERFORM * FROM update_stock(OLD.sales_date, component.basic_component,
-                    component.quantity, component.um,TRUE);
+                    component.quantity*NEW.quantity_sold, component.um,TRUE);
             END LOOP;
             FOR component IN SELECT * FROM article_made_up(NEW.article) LOOP
                 PERFORM * FROM update_stock(NEW.sales_date, component.basic_component,
-                    component.quantity, component.um,FALSE);
+                    component.quantity*NEW.quantity_sold, component.um,FALSE);
             END LOOP;
         ELSE
             FOR component IN SELECT * FROM article_made_up(OLD.article) LOOP
                 PERFORM * FROM update_stock(OLD.sales_date,component.basic_component,
-                    component.quantity, component.um,TRUE);
+                    component.quantity*OLD.quantity_sold, component.um,TRUE);
             END LOOP;
         END IF;
         RETURN NULL;

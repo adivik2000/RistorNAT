@@ -49,10 +49,13 @@ public:
       * @return Expense
       */
     QString family() { return "Expense"; }
+
 public slots:
     void okPressed();
+
 private:
     Ui::stockUi stockUi;
+    QStandardItemModel m_viewModel; /**< @brief Model for report table */
 };
 
 #endif // STOCK_H

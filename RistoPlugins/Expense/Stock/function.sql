@@ -91,10 +91,11 @@ CREATE TYPE stock_report AS
 );
 
 
-CREATE OR REPLACE FUNCTION report_hist_stock(p_date_from DATE,
+CREATE OR REPLACE FUNCTION report_hist_stock(p_article VARCHAR,
+                                                                                p_date_from DATE,
                                                                                 p_date_to DATE)
     RETURNS SETOF stock_report AS $$
         SELECT article, sum(modifier), um FROM stock_log
-            WHERE stock_date>=$1 AND stock_date<=$2
+            WHERE stock_date>=$2 AND stock_date<=$3 AND article=$1
             GROUP BY article, um;
 $$ LANGUAGE SQL;
