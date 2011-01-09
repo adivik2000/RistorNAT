@@ -72,6 +72,11 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete settingWindow;
+    QMapIterator<QString,stackedWContainer*> i(m_fam);
+    while (i.hasNext()) {
+        i.next();
+        delete i.value();
+    }
 }
 
 /** @brief Load application-plugins

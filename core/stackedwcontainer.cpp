@@ -62,6 +62,9 @@ stackedWContainer::~stackedWContainer()
 {
     delete m_contentsWidget;
     delete m_pagesWidget;
+    foreach (pluginInterface *child, m_plugins) {
+        delete child;
+    }
 }
 
 void stackedWContainer::add(pluginInterface *child)
