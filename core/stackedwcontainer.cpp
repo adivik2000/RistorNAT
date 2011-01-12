@@ -60,11 +60,11 @@ stackedWContainer::stackedWContainer(QWidget *parent):QWidget(parent)
   */
 stackedWContainer::~stackedWContainer()
 {
-    delete m_contentsWidget;
-    delete m_pagesWidget;
     foreach (pluginInterface *child, m_plugins) {
         delete child;
     }
+    delete m_contentsWidget;
+    delete m_pagesWidget;
 }
 
 void stackedWContainer::add(pluginInterface *child)

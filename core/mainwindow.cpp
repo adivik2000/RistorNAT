@@ -72,6 +72,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete settingWindow;
+    disconnect(m_main,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
     QMapIterator<QString,stackedWContainer*> i(m_fam);
     while (i.hasNext()) {
         i.next();
@@ -145,6 +146,7 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
 
     connect(tabWidget,SIGNAL(currentChanged(int)),this,SLOT(pageChanged(int)));
 
+    m_main = tabWidget;
     return tabWidget;
 }
 

@@ -234,6 +234,7 @@ void workUi::dateChanged(const QDate &date)
     m_ui->spinPlaces->setValue(places);
 
     m_date = date;
+    m_articlesInserted.clear();
     delete old_every;
     delete old_comanda;
 }

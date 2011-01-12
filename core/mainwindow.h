@@ -153,6 +153,7 @@ private:
     stackedWContainer *currentPage;
     QMap<int,QString> m_numberFam;
     QMap<QString,stackedWContainer*> m_fam;
+    QTabWidget *m_main;
 };
 
 #endif // MAINWINDOW_H

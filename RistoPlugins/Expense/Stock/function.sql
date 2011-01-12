@@ -49,7 +49,7 @@ CREATE OR REPLACE FUNCTION update_stock(p_date DATE, p_article VARCHAR, p_quanti
         div NUMERIC;
         new_qty NUMERIC;
     BEGIN
-        SELECT * INTO old_stock_log FROM stock_log WHERE article=p_article;
+        SELECT * INTO old_stock_log FROM stock_log WHERE article=p_article LIMIT 1;
 
         IF FOUND THEN
             div := get_div_for_um(old_stock_log.um, p_um);
