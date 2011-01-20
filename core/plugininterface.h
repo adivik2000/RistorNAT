@@ -25,7 +25,12 @@
 #include <QList>
 #include <QAction>
 
-/** @brief
+/** @brief Interface for all RistorNAT's plugins
+  *
+  * Every plugin in RistorNat must provide following methods, which are called by
+  * the plugin loader.
+  *
+  * @see stackedWContainer
   */
 class pluginInterface : public QWidget
 {
@@ -44,27 +49,28 @@ public:
       *
       * Every plugin needs its own icon. The icon can be NULLed (default
       * constructor of QIcon) but not zeroed.
-      * @param path Path for the icons
       * @return Plugin icon
       */
     virtual QIcon icon() = 0;
 
-    /** @brief Register the tool bar, to let the plugin to add or remove
-      * custom button.
-      * @param toolBar Valid QToolBar
+    /** @brief Family of the plugin. The family is a single tab in the main
+      * widget, and each plugin in the family is displayer a stacked widget.
+      *
+      * @return Name of the family
       */
-    virtual void registerToolBar(QToolBar *toolBar) {
-        Q_ASSERT(toolBar != 0);
-        m_toolBar = toolBar;
-    }
-
     virtual QString family() = 0;
 
+    /** @brief Function called when user click on the plugin icon, and plugin is going
+      * to be opened.
+      */
     virtual void aboutToBeOpened() { }
-    virtual void aboutToBeClosed() { }
 
-protected:
-    QToolBar *m_toolBar;
+    /** @brief Function called when the plugin is hided because user has clicked
+      * another icon.
+      *
+      * The plugin stays in RAM, it isn't destroyed.
+      */
+    virtual void aboutToBeClosed() { }
 };
 
 Q_DECLARE_INTERFACE(pluginInterface,

@@ -3,7 +3,7 @@
 #include <QHash>
 #include <simplequery.h>
 
-/** @internal
+/**
   * @brief Test management category functions
   *
   * The function tested are: report_management_category and

@@ -22,11 +22,11 @@
 
 #include <QtGui>
 #include <QTabWidget>
-#include "settingsui.h"
 #include <QObject>
 #include <QTabWidget>
 #include <QList>
 #include "connection.h"
+#include "settingsui.h"
 #include "plugininterface.h"
 
 class stackedWContainer;
@@ -34,7 +34,7 @@ class stackedWContainer;
 /** @author Natale Patriciello, 2009-2010
   * @mainpage RistorNAT
   *
-  * @image html article_component.tiff
+  * @image html article_component.png
   * RistorNAT is a GPL software to manage a restaurant. It can do various things:
   * - It can handle expense's side, allowing you to insert, report and do
   * statistics about all your expenses;
@@ -42,7 +42,7 @@ class stackedWContainer;
   * articles, and generate report and statistics about article's price;
   * - It can store all about your working days, like places and selling.
   *
-  * All things with a nice User Interface, developped with the maximun attention
+  * All things with a nice User Interface, developed with the maximun attention
   * to the User Experience.
   *
   * @section Download
@@ -69,7 +69,7 @@ class stackedWContainer;
   * -# 0.4.0 : The Christmas bug (25/12/2009)
   * -# 0.4.1 : The First 0x7DA Release (13/1/2010)
   * -# 0.4.2 : Fast&Fuori Release (6/3/2010)
-  * -# 0.5.0 : TrueHell (x/x/2010)
+  * -# 0.5.0 : TrueHell (20/01/2011)
   *
   * @section RoadMap
   *
@@ -80,6 +80,7 @@ class stackedWContainer;
   * -# Added last and average cost for every Goods for sale (GoodsForSale)
   * -# Added statistics for the management category (MngmCostReport)
   * -# Added statistics for sellers (SellersReport)
+  * -# Added actual stock and history stock
   *
   * @section Support
   * For RistorNAT is available only a commercial support.
@@ -108,7 +109,6 @@ class stackedWContainer;
 /** @todo Complementary - uscite che costano 0 (offerte e quello che si mangiano i dip */
 /** @todo Aggiungere un modulo di riepilogo, uscite / entrate, decisamente modulare */
 /** @todo Molto piu' avanti: COSTO PERSONALE e gestione IVA */
-/** @todo Storico di uno stock, solo con il valore in $, ad ogni modifica dello stock */
 
 /** @brief User Interface namespace
   * Namespace for all the User Interface things, like widget.\n

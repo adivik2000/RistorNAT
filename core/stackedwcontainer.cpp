@@ -25,9 +25,6 @@
 /** @brief Create a root-plugin and loads its sub-plugins
   *
   * @param parent Parent
-  * @param iconName Icon name
-  * @param path Path of sub-plugins
-  * @param iconName Plugin icon (only the name)
   */
 stackedWContainer::stackedWContainer(QWidget *parent):QWidget(parent)
 {
@@ -138,6 +135,9 @@ void stackedWContainer::aboutToBeOpened()
         child->aboutToBeOpened();
 }
 
+/** @brief Close the opened plugin
+  *
+  */
 void stackedWContainer::aboutToBeClosed()
 {
     pluginInterface *widgetToClose = qobject_cast<pluginInterface*>(

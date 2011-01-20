@@ -121,7 +121,6 @@ QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
 
          if (likely(child != 0)) {
              QString family = child->family();
-             child->registerToolBar(toolBar);
 
              if (! m_fam.contains(family)) {
                 stackedWContainer *cont = new stackedWContainer(tabWidget);

@@ -38,7 +38,7 @@ namespace Ui {
   *
   * This interface is called when you click on More Detail in the right-click menu of
   * the class Dinner or Lunch.
-  * @image html workUi.tiff
+  * @image html workUi.png
   * Here you could select the date (but it has default on the date that you
   * selected before) and, if no sell exists, insert the total places.\n
   * After you leave the text edit, you could insert the good which you sale;

@@ -72,6 +72,7 @@ protected slots:
   * @see userInterface::saveSell
   * @param model Model for the articles sold
   * @param date Date of the lunch
+  * @param places Places of the lunch
   */
 inline void Lunch::editingFinished(QStandardItemModel *model, const QDate& date,
                                    int places)
@@ -85,6 +86,7 @@ inline void Lunch::editingFinished(QStandardItemModel *model, const QDate& date,
   * @param model In this parameter will return the model of the articles sold,
   * or NULL if there aren't articles
   * @param date Date of the lunch
+  * @param places Places of the lunch
   */
 inline void Lunch::getSoldAtDate(QAbstractItemModel *&model, const QDate& date,
                                  int &places)
