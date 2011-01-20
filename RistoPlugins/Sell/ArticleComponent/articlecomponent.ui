@@ -15,19 +15,22 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
+    <layout class="QVBoxLayout" name="toolLayout"/>
+   </item>
+   <item row="0" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Selling Article:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="2">
     <widget class="simpleCombo" name="comboSelling"/>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0" colspan="3">
     <widget class="advancedTable" name="tableView">
      <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
+      <set>QAbstractItemView::EditKeyPressed</set>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
@@ -48,7 +51,7 @@
   <customwidget>
    <class>advancedTable</class>
    <extends>QTableView</extends>
-   <header location="global">advancedtable.h</header>
+   <header>advancedtable.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -37,7 +37,11 @@ sellCategory::sellCategory(QWidget *parent):pluginInterface(parent)
     m_detail->setupUi(detailBox);
     connect(m_detail->buttonOk,SIGNAL(clicked()),this,SLOT(updateReport()));
 
+    QToolBar *toolBar = m_table->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
     QGridLayout *layout = new QGridLayout(this);
+    layout->addWidget(toolBar);
     layout->addWidget(m_table);
     layout->addWidget(detailBox);
 

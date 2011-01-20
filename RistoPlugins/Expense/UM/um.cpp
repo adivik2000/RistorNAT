@@ -34,14 +34,12 @@ UnitOfMeasurement::UnitOfMeasurement(QWidget *parent):pluginInterface(parent)
     tableComp->setTableName("unit_of_measurement");
     tableComp->addRelation(1,"unit_of_measurement","um","name");
 
-    QLabel *desc_adv = new QLabel(this);
-    desc_adv->setText(tr("Insert the unit of measurement which will be used"
-                         " by other plugins, like Kg, g, lt, cl.. and don't"
-                         " worry if you see duplicates."));
-
     QGridLayout *layout = new QGridLayout(this);
 
-    layout->addWidget(desc_adv,0,0);
+    QToolBar *toolBar = tableComp->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    layout->addWidget(toolBar,0,0);
     layout->addWidget(tableComp,1,0);
 }
 

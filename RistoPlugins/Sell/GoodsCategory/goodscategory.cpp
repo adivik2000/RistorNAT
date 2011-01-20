@@ -33,6 +33,8 @@ goodsCategory::goodsCategory(QWidget *parent):pluginInterface(parent)
 {
     m_table = new simpleTable(this);
     m_table->setTableName("goods_category");
+    QToolBar *toolBar = m_table->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     QGroupBox *detailBox = new QGroupBox(this);
     m_detail = new Ui::goodsCategoryDetail;
@@ -40,6 +42,7 @@ goodsCategory::goodsCategory(QWidget *parent):pluginInterface(parent)
     connect(m_detail->buttonOk,SIGNAL(clicked()),this,SLOT(updateReport()));
 
     QGridLayout *layout = new QGridLayout(this);
+    layout->addWidget(toolBar);
     layout->addWidget(m_table);
     layout->addWidget(detailBox);
 

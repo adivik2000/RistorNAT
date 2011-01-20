@@ -26,6 +26,7 @@ Stock::Stock(QWidget *parent):pluginInterface(parent)
 {
     stockUi.setupUi(this);
     stockUi.tableActualStock->setTableName("stock");
+    stockUi.tableActualStock->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     m_viewModel.insertColumn(0);
     m_viewModel.insertColumn(1);

@@ -31,6 +31,10 @@ seller::seller(QWidget *parent) : pluginInterface(parent)
     ui.setupUi(this);
     ui.tableSeller->setTableName("supplier");
 
+    QToolBar *toolBar = ui.tableSeller->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui.toolLayout->addWidget(toolBar);
+
     m_viewModel.insertColumn(0);
     m_viewModel.insertColumn(1);
     m_viewModel.setHeaderData(0,Qt::Horizontal,tr("Seller"));

@@ -31,17 +31,19 @@
   */
 basicGood::basicGood(QWidget *parent):pluginInterface(parent)
 {
-    QToolBar *toolBar = new QToolBar(this);
-    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    QAction *m_refresh = new QAction(QIcon(":/refresh.svg"),
-                                     tr("Refresh Costs"),toolBar);
-    toolBar->addAction(m_refresh);
-
     m_table = new simpleTable(this);
     m_table->setTableName("basic_good");
     m_table->setColumnWidth(0,300);
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->addRelation(1,"unit_of_measurement","name","name");
+
+    QToolBar *toolBar = m_table->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    QAction *m_refresh = new QAction(QIcon(":/refresh.svg"),
+                                     tr("Refresh Costs"),toolBar);
+    toolBar->addSeparator();
+    toolBar->addAction(m_refresh);
 
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(toolBar);

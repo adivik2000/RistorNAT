@@ -55,6 +55,10 @@ managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent
             SLOT(categoryClicked()));
     connect(ui.tableDescription,SIGNAL(pressed(QModelIndex)),this,
             SLOT(descriptionClicked()));
+
+    QToolBar *toolBar = ui.tableCategory->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui.toolLayout->addWidget(toolBar);
 }
 
 /** @brief Deconstructor

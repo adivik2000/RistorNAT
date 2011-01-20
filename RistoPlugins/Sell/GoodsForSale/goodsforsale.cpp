@@ -30,18 +30,21 @@
   */
 goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
 {
-    QToolBar *toolBar = new QToolBar(this);
-    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh Costs"),toolBar);
-    connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
-    toolBar->addAction(refresh);
-
     m_table = new advancedTable(this);
     m_table->setTableName("good_for_sale");
     m_table->setDefaultValue(0,QVariant(),true);
     m_table->addRelation(2,"goods_category","description","description");
     m_table->addRelation(3,"sell_category","description","description");
     m_table->addRelation(5,"unit_of_measurement","name","name");
+
+
+    QToolBar *toolBar = m_table->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh Costs"),toolBar);
+    connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
+    toolBar->addSeparator();
+    toolBar->addAction(refresh);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(toolBar);

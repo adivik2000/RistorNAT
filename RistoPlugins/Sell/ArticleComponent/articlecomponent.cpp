@@ -37,6 +37,11 @@ articleComponent::articleComponent(QWidget *parent) :
     ui->tableView->addRelation(0,"basic_good","name","name");
     ui->tableView->addRelation(1,"good_for_sale","id","description");
     ui->tableView->addRelation(3,"unit_of_measurement","name","name");
+
+    QToolBar *toolBar = ui->tableView->getToolBar();
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    ui->toolLayout->addWidget(toolBar);
 }
 
 /** @brief Deconstructor
