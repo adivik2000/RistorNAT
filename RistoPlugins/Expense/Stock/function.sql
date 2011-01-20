@@ -8,23 +8,6 @@ CREATE OR REPLACE FUNCTION delete_from_stock(p_good VARCHAR)
         DELETE FROM stock_log WHERE article=$1;
 $$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION get_div_for_um(p_um1 VARCHAR, p_um2 VARCHAR)
-    RETURNS NUMERIC AS $$
-    DECLARE
-        div NUMERIC;
-        um1 RECORD;
-        um2 RECORD;
-    BEGIN
-        SELECT * INTO um1 FROM get_basic_and_mult_for_um(p_um1);
-        SELECT * INTO um2 FROM get_basic_and_mult_for_um(p_um2);
-        IF um1.base != um2.base THEN
-            RAISE EXCEPTION 'No compatible base. Aborting';
-        END IF;
-        div := um1.multi / um2.multi;
-        RETURN div;
-    END;
-$$ LANGUAGE 'plpgsql';
-
 CREATE OR REPLACE FUNCTION update_stock_qty_changing_um() RETURNS TRIGGER AS $$
     DECLARE
         div NUMERIC;
