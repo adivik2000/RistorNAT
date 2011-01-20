@@ -18,6 +18,9 @@ CREATE OR REPLACE FUNCTION report_seller_purchasing(p_seller VARCHAR, p_date_fro
         stmt := stmt || ' GROUP BY seller';
 
         EXECUTE stmt INTO amount;
+        IF amount IS NULL THEN
+            amount := 0;
+        END IF;
         RETURN amount;
     END;
 $$ LANGUAGE 'plpgsql';
@@ -42,6 +45,9 @@ CREATE OR REPLACE FUNCTION report_seller_goods(p_seller VARCHAR, p_date_from DAT
         stmt := stmt || ' GROUP BY seller';
 
         EXECUTE stmt INTO amount;
+        IF amount IS NULL THEN
+            amount := 0;
+        END IF;
         RETURN amount;
     END;
 $$ LANGUAGE 'plpgsql';
@@ -57,14 +63,6 @@ CREATE OR REPLACE FUNCTION report_seller_amount(p_seller VARCHAR, p_date_from DA
     BEGIN
         SELECT * INTO amount_dpc FROM report_seller_purchasing(p_seller,p_date_from,p_date_to);
         SELECT * INTO amount_dgc FROM report_seller_goods(p_seller,p_date_from,p_date_to);
-
-        IF amount_dpc IS NULL THEN
-            amount_dpc := 0;
-        END IF;
-
-        IF amount_dgc IS NULL THEN
-            amount_dgc := 0;
-        END IF;
 
         amount := amount_dpc + amount_dgc;
 
