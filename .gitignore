@@ -17,6 +17,8 @@ doc/html
 RistorNAT
 Database/DatabaseSchema.sql
 Database/DatabaseFn.sql
+Database/DatabaseTest.sql
+Database/DatabaseTestExec.sql
 
 #ignore the os x useless file
 RistorNAT.app

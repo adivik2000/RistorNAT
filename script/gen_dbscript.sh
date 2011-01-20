@@ -3,6 +3,8 @@
 # Configuration
 SCHEMA=Database/DatabaseSchema.sql
 FN=Database/DatabaseFn.sql
+TESTS=Database/DatabaseTest.sql
+TESTS_EXEC=Database/DatabaseTestExec.sql
 PREFIX=RistoPlugins
 
 # Worker. DO NOT MODIFY UNLESS YOU KNOW WHAT YOU'RE DOING.
@@ -22,6 +24,14 @@ if [[ -f $FN ]]; then
 	rm $FN
 fi
 
+if [[ -f $TESTS ]]; then
+	rm $TESTS
+fi
+
+if [[ -f $TESTS_EXEC ]]; then
+	rm $TESTS_EXEC
+fi
+
 echo -en "CREATE LANGUAGE plpgsql;" >> $FN
 
 for i in \
@@ -38,8 +48,15 @@ for i in \
     $PREFIX/Work/Lunch \
     $PREFIX/Work/Dinner
 do
-        cat $i/table.sql >> $SCHEMA
-	cat $i/function.sql >> $FN
+	cat $i/table.sql 	>> $SCHEMA
+	cat $i/function.sql 	>> $FN
+	name=$(echo $i | cut -d '/' -f3)
+	if [[ -f $i/tests.sql ]]; then
+		cat $i/tests.sql 	>> $TESTS
+		echo "SELECT * FROM test_${name}_init();" >> $TESTS_EXEC
+		echo "SELECT * FROM test_${name}_do();" >> $TESTS_EXEC
+		echo "SELECT * FROM test_${name}_clean();" >> $TESTS_EXEC
+	fi
 done
 
 echo -en "\nCREATE TABLE "db_version"
