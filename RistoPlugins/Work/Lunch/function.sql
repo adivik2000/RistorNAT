@@ -91,8 +91,10 @@ CREATE OR REPLACE FUNCTION update_last_price()
     RETURNS TRIGGER AS $$
     DECLARE
     BEGIN
-        UPDATE good_for_sale SET last_price = NEW.sell_price
-            WHERE id = NEW.article;
+        IF NEW.sell_price != 0 THEN
+            UPDATE good_for_sale SET last_price = NEW.sell_price
+                WHERE id = NEW.article;
+        END IF;
 
         RETURN NULL;
     END;
