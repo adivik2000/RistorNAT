@@ -7,7 +7,7 @@ CREATE TYPE um_related AS (
    *
    * Use this when you need to port values in the first unit to values in the second.
    *
-   *
+   */
 CREATE OR REPLACE FUNCTION get_div_for_um(p_um1 VARCHAR, p_um2 VARCHAR)
     RETURNS NUMERIC AS $$
     DECLARE

@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     try {
         if (!setupDatabase())
             return;
-        mainWidget = loadApp(ui->menuBar, ui->mainToolBar);
+        mainWidget = loadApp(ui->menuBar);
     } catch (QString e) {
         qDebug() << e;
     }
@@ -92,7 +92,7 @@ MainWindow::~MainWindow()
   * @see appInterface::setupDatabase
   * @see appInterface::setupUi
   */
-QWidget* MainWindow::loadApp(QMenuBar* menuBar, QToolBar *toolBar)
+QWidget* MainWindow::loadApp(QMenuBar* menuBar)
 {
     Q_UNUSED(menuBar);
     QTabWidget *tabWidget = new QTabWidget;

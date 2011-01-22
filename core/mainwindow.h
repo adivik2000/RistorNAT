@@ -73,6 +73,10 @@ class stackedWContainer;
   *
   * @section RoadMap
   *
+  * @par 0.5.1
+  *
+  * -# Complementary sells
+  *
   * @section ChangeLog
   *
   * @par 0.5.0
@@ -106,7 +110,6 @@ class stackedWContainer;
   */
 
 /** @todo Se il costo di un art e' x, lo vendo a y, voglio la % di guadagno. FOOD COST %*/
-/** @todo Complementary - uscite che costano 0 (offerte e quello che si mangiano i dip */
 /** @todo Aggiungere un modulo di riepilogo, uscite / entrate, decisamente modulare */
 /** @todo Molto piu' avanti: COSTO PERSONALE e gestione IVA */
 
@@ -148,7 +151,7 @@ private slots:
 private:
     Ui::MainWindow *ui; /**< @brief GUI */
     QPointer<settingsUi> settingWindow; /**< @brief Settings GUI */
-    QWidget* loadApp(QMenuBar *menuBar, QToolBar *toolBar);
+    QWidget* loadApp(QMenuBar *menuBar);
     Connection m_con; /**< @brief Default connection */
     stackedWContainer *currentPage;
     QMap<int,QString> m_numberFam;
