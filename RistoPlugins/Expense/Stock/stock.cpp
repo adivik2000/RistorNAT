@@ -62,14 +62,14 @@ void Stock::okPressed()
         QAbstractItemModel *model = query.getResult();
 
         if (likely(model != 0)) {
-            Q_ASSERT(model->rowCount() == 1);
-
             QStandardItem *art = new QStandardItem(article.toString());
-            QStandardItem *qty = new QStandardItem(model->data(model->index(0,1)).toString());
-            QStandardItem *um = new QStandardItem(model->data(model->index(0,2)).toString());
-
-            if (qty->text().isEmpty()) {
-                qty->setText("0");
+            QStandardItem *qty, *um;
+            if (model->rowCount() > 1) {
+                qty = new QStandardItem(model->data(model->index(0,1)).toString());
+                um = new QStandardItem(model->data(model->index(0,2)).toString());
+            } else {
+                qty = new QStandardItem(tr("Not present"));
+                um = new QStandardItem("");
             }
 
             modelView->setItem(rowDone, 0, art);
