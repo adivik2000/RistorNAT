@@ -20,6 +20,7 @@
 #define GOODSFORSALE_H
 
 #include "plugininterface.h"
+#include "ui_goodsforsale.h"
 
 class advancedTable;
 
@@ -63,9 +64,10 @@ public:
 
 private slots:
     void updateCost();
+    void refreshCostUi();
 
 private:
-    advancedTable *m_table; /**< Main Table */
+    Ui::goodForSaleUi  m_ui;
 };
 
 #endif // GOODSFORSALE_H

@@ -30,26 +30,26 @@
   */
 goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
 {
-    m_table = new advancedTable(this);
-    m_table->setTableName("good_for_sale");
-    m_table->setDefaultValue(0,QVariant(),true);
-    m_table->addRelation(2,"goods_category","description","description");
-    m_table->addRelation(3,"sell_category","description","description");
-    m_table->addRelation(5,"unit_of_measurement","name","name");
+    m_ui.setupUi(this);
+    m_ui.tableView->setTableName("good_for_sale");
+    m_ui.tableView->setDefaultValue(0,QVariant(),true);
+    m_ui.tableView->addRelation(2,"goods_category","description","description");
+    m_ui.tableView->addRelation(3,"sell_category","description","description");
+    m_ui.tableView->addRelation(5,"unit_of_measurement","name","name");
+    m_ui.tableView->setColumnHidden(6, true);
+    m_ui.tableView->setColumnHidden(7, true);
 
-
-    QToolBar *toolBar = m_table->getToolBar();
+    QToolBar *toolBar = m_ui.tableView->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     QAction *refresh = new QAction(QIcon(":/refresh.svg"),tr("Refresh Costs"),toolBar);
     connect(refresh,SIGNAL(triggered()),this,SLOT(updateCost()));
+    connect(m_ui.tableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this,SLOT(refreshCostUi()));
     toolBar->addSeparator();
     toolBar->addAction(refresh);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->addWidget(toolBar);
-    layout->addWidget(m_table);
-    setLayout(layout);
+    m_ui.toolLayout->addWidget(toolBar);
 }
 
 /** @brief Update the average cost for articles selected
@@ -58,7 +58,7 @@ void goodsForSale::updateCost()
 {
     simpleQuery query("set_article_average_cost");
 
-    QItemSelectionModel *_selectionModel = m_table->selectionModel();
+    QItemSelectionModel *_selectionModel = m_ui.tableView->selectionModel();
     QModelIndexList indexes = _selectionModel->selectedIndexes();
     QVector<int> map;
 
@@ -84,7 +84,8 @@ void goodsForSale::updateCost()
             msgBox.exec();
         }
     }
-    m_table->setTableName("good_for_sale");
+
+    m_ui.tableView->refresh();
 
     if (indexes.isEmpty()) {
         QMessageBox msgBox;
@@ -95,6 +96,35 @@ void goodsForSale::updateCost()
 
         msgBox.exec();
     }
+}
+
+/** @brief Refresh statistics about selected good
+  *
+  */
+void goodsForSale::refreshCostUi()
+{
+    QItemSelectionModel *_selectionModel = m_ui.tableView->selectionModel();
+    QModelIndex index = _selectionModel->currentIndex();
+
+    QModelIndex last_price = index.sibling(index.row(), 6);
+    QModelIndex avg_cost = index.sibling(index.row(), 7);
+
+    QVariant lastPrice = m_ui.tableView->model()->data(last_price);
+    QVariant avgCost = m_ui.tableView->model()->data(avg_cost);
+
+    // x=V-C is earn on this item;  x*100/V is the %
+    QVariant earn = ((lastPrice.toDouble() - avgCost.toDouble()) * 100) / lastPrice.toDouble();
+    QString earn_display;
+
+    if (earn.toString() == "nan" || earn.toString() == "-inf" || earn.toString() == "inf")
+        earn_display = tr("Can't calculate");
+    else
+        earn_display = earn.toString();
+
+    m_ui.lastPrice_edit->setText(lastPrice.toString());
+    m_ui.avgPrice_edit->setText(avgCost.toString());
+    m_ui.guagagno_edit->setText(earn_display);
+
 }
 
 Q_EXPORT_PLUGIN2(goodsforsale, goodsForSale);
