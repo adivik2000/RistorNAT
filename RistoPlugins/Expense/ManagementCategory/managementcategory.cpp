@@ -46,6 +46,10 @@ managementCategory::managementCategory(QWidget *parent) : pluginInterface(parent
 
     ui.tableView->setModel(&m_viewModel);
 
+    QStringList header;
+    header << tr("Category name");
+    ui.tableCategory->setHeader(header);
+
     QStandardItemModel *model = new QStandardItemModel(this);
     ui.tableViewDetailed->setModel(model);
 

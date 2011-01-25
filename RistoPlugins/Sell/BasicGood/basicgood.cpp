@@ -37,6 +37,10 @@ basicGood::basicGood(QWidget *parent):pluginInterface(parent)
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->addRelation(1,"unit_of_measurement","name","name");
 
+    QStringList header;
+    header << tr("Name") << tr("UM") << tr("Average cost");
+    m_table->setHeader(header);
+
     QToolBar *toolBar = m_table->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 

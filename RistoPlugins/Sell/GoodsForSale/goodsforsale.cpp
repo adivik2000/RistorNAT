@@ -20,6 +20,7 @@
 #include <QtPlugin>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QStringList>
 #include <advancedtable.h>
 #include <simplequery.h>
 
@@ -38,6 +39,12 @@ goodsForSale::goodsForSale(QWidget *parent):pluginInterface(parent)
     m_ui.tableView->addRelation(5,"unit_of_measurement","name","name");
     m_ui.tableView->setColumnHidden(6, true);
     m_ui.tableView->setColumnHidden(7, true);
+
+    QStringList header;
+    header << "id" << tr("Article name") << tr("Good category")
+           << tr("Sell category") << tr("Quantity") << tr("Unit of measurement")
+           << tr("Last price") << tr("Average cost");
+    m_ui.tableView->setHeader(header);
 
     QToolBar *toolBar = m_ui.tableView->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);

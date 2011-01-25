@@ -20,6 +20,8 @@
 #define UM_H
 
 #include <plugininterface.h>
+#include <simpletable.h>
+#include <QGridLayout>
 
 class simpleTable;
 class advancedTable;

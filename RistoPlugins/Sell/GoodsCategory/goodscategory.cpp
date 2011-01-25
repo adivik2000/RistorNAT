@@ -33,6 +33,11 @@ goodsCategory::goodsCategory(QWidget *parent):pluginInterface(parent)
 {
     m_table = new simpleTable(this);
     m_table->setTableName("goods_category");
+
+    QStringList header;
+    header << tr("Name");
+    m_table->setHeader(header);
+
     QToolBar *toolBar = m_table->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 

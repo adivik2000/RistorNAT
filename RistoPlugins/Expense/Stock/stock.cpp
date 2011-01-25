@@ -28,12 +28,14 @@ Stock::Stock(QWidget *parent):pluginInterface(parent)
     stockUi.tableActualStock->setTableName("stock");
     stockUi.tableActualStock->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    m_viewModel.insertColumn(0);
-    m_viewModel.insertColumn(1);
-    m_viewModel.insertColumn(2);
-    m_viewModel.setHeaderData(0,Qt::Horizontal,tr("Article"));
-    m_viewModel.setHeaderData(1,Qt::Horizontal,tr("Quantity"));
-    m_viewModel.setHeaderData(2,Qt::Horizontal,tr("Unit of measurement"));
+    QStringList header;
+    header << tr("Article") << tr("Quantity") << tr("Unit of measurment");
+    stockUi.tableActualStock->setHeader(header);
+
+    for (int i=0; i<3; i++) {
+        m_viewModel.insertColumn(i);
+        m_viewModel.setHeaderData(i, Qt::Horizontal, header.at(i));
+    }
 
     stockUi.tableReportStock->setModel(&m_viewModel);
 }

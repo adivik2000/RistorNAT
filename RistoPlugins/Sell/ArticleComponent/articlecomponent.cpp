@@ -27,28 +27,31 @@
   *
   * @param parent Parent
   */
-articleComponent::articleComponent(QWidget *parent) :
-    pluginInterface(parent),ui(new Ui::articleComponentUi)
+articleComponent::articleComponent(QWidget *parent) : pluginInterface(parent)
 {
-    ui->setupUi(this);
-    ui->comboSelling->initialize("good_for_sale",0,1);
+    m_ui.setupUi(this);
+    m_ui.comboSelling->initialize("good_for_sale",0,1);
 
-    ui->tableView->setTableName("article_component");
-    ui->tableView->addRelation(0,"basic_good","name","name");
-    ui->tableView->addRelation(1,"good_for_sale","id","description");
-    ui->tableView->addRelation(3,"unit_of_measurement","name","name");
+    m_ui.tableView->setTableName("article_component");
+    m_ui.tableView->addRelation(0,"basic_good","name","name");
+    m_ui.tableView->addRelation(1,"good_for_sale","id","description");
+    m_ui.tableView->addRelation(3,"unit_of_measurement","name","name");
 
-    QToolBar *toolBar = ui->tableView->getToolBar();
+    QStringList header;
+    header << tr("Basic Component") << tr("Selling Component")
+                << tr("Quantity") << tr("UM");
+    m_ui.tableView->setHeader(header);
+
+    QToolBar *toolBar = m_ui.tableView->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->toolLayout->addWidget(toolBar);
+    m_ui.toolLayout->addWidget(toolBar);
 }
 
 /** @brief Deconstructor
   */
 articleComponent::~articleComponent()
 {
-    delete ui;
 }
 
 /** @brief Retranslate UI */
@@ -57,7 +60,7 @@ void articleComponent::changeEvent(QEvent *e)
     QWidget::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        m_ui.retranslateUi(this);
         break;
     default:
         break;
@@ -68,7 +71,7 @@ void articleComponent::changeEvent(QEvent *e)
   */
 void articleComponent::sellingChanged()
 {
-    if (likely(ui->tableView->isDirty())) {
+    if (likely(m_ui.tableView->isDirty())) {
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setText(tr("The table has been modified."));
@@ -80,24 +83,24 @@ void articleComponent::sellingChanged()
         int ret = msgBox.exec();
 
         if (ret == QMessageBox::Save)
-                ui->tableView->saveChanges();
+                m_ui.tableView->saveChanges();
     }
 
-    if (unlikely(ui->comboSelling->currentIndex() <= 0)) {
-        ui->tableView->setFilter("");
-        ui->tableView->resetDefaultValue(1);
+    if (unlikely(m_ui.comboSelling->currentIndex() <= 0)) {
+        m_ui.tableView->setFilter("");
+        m_ui.tableView->resetDefaultValue(1);
         return;
     }
 
-    QVariant pk = ui->comboSelling->getPrimaryKeyOfSelected();
-    ui->tableView->setFilter("selling_component="+pk.toString());
-    ui->tableView->setDefaultValue(1,pk,true);
+    QVariant pk = m_ui.comboSelling->getPrimaryKeyOfSelected();
+    m_ui.tableView->setFilter("selling_component="+pk.toString());
+    m_ui.tableView->setDefaultValue(1,pk,true);
 }
 
 /** @brief Refresh the combobox each time plugin is displayed */
 void articleComponent::aboutToBeOpened()
 {
-    ui->comboSelling->refresh();
+    m_ui.comboSelling->refresh();
 }
 
 Q_EXPORT_PLUGIN2(articlecomponent, articleComponent);

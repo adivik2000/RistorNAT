@@ -67,7 +67,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::articleComponentUi *ui; /**< @brief Ui object */
+    Ui::articleComponentUi m_ui; /**< @brief Ui object */
 };
 
 #endif // COMPONENTUI_H

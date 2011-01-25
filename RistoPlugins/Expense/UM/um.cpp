@@ -17,30 +17,30 @@
  *  along with RistorNAT.If not, see <http://www.gnu.org/licenses/>.
  */
 #include "um.h"
-#include <advancedtable.h>
-#include <workdelegate.h>
-
-#include <QLabel>
 #include <QtPlugin>
-#include <QGridLayout>
 
 /** @brief Constructor
   *
   */
 UnitOfMeasurement::UnitOfMeasurement(QWidget *parent):pluginInterface(parent)
 {
-    simpleTable *tableComp = new simpleTable(this);
+    simpleTable *m_table = new simpleTable(this);
+    QGridLayout *m_layout = new QGridLayout(this);
 
-    tableComp->setTableName("unit_of_measurement");
-    tableComp->addRelation(1,"unit_of_measurement","um","name");
+    m_table->setTableName("unit_of_measurement");
+    m_table->addRelation(1,"unit_of_measurement","um","name");
 
-    QGridLayout *layout = new QGridLayout(this);
+    QStringList header;
+    header << tr("Name") << tr("Base UM") << tr("Multiplicator");
+    m_table->setHeader(header);
 
-    QToolBar *toolBar = tableComp->getToolBar();
+    QToolBar *toolBar = m_table->getToolBar();
     toolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    layout->addWidget(toolBar,0,0);
-    layout->addWidget(tableComp,1,0);
+    m_layout->addWidget(toolBar,0,0);
+    m_layout->addWidget(m_table,1,0);
+
+    setLayout(m_layout);
 }
 
 Q_EXPORT_PLUGIN2(UnitOfMeasurement, UnitOfMeasurement);

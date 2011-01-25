@@ -32,6 +32,10 @@ sellCategory::sellCategory(QWidget *parent):pluginInterface(parent)
     m_table = new simpleTable(this);
     m_table->setTableName("sell_category");
 
+    QStringList header;
+    header << tr("Name");
+    m_table->setHeader(header);
+
     QGroupBox *detailBox = new QGroupBox(this);
     m_detail = new Ui::sellCategoryDetail;
     m_detail->setupUi(detailBox);
